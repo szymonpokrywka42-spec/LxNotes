@@ -1,54 +1,58 @@
-# Contributing to LxNotes 🚀
+# Contributing to LxNotes
 
-First of all, thank you! LxNotes is growing
-fast, and we’re thrilled to have you here. This document will help you understand how the project is structured and how you can contribute effectively.
+Thanks for contributing. This document describes the expected workflow and architecture boundaries.
 
-## 🏗 Project Architecture
+## Project Structure
 
-LxNotes follows a modular structure to keep the code clean and maintainable.
+- `main.py` - app entry point and setup/bootstrap flow.
+- `ui/` - PyQt6 window, dialogs, menus, visual behavior.
+- `core/` - editor/file/theme/logging logic.
+- `core/cengines/` - native C++ `lx_engine` implementation.
+- `LxCharset/` - bundled charset module used by `FileHandler`.
 
-### 🎨 Frontend (The Face)
-- **Framework:** PyQt6.
-- **Main Window:** Located in `main_window.py`. It handles the main UI assembly.
-- **Styling:** We use CSS-like stylesheets (QSS) to manage themes.
-- **Components:** Custom widgets (like the Editor or Console) are organized into separate modules to keep `MainWindow` lightweight.
+## Key Integration Rules
 
-### ⚙️ Backend & Logic (The Brain)
-- **File Handling:** Managed by `file_handler.py` and `lx_engine.cpp` for simplicity and performance.
-- **Performance Engine (C++):** Our secret sauce. For large files, the `lx_engine` module (C++) takes over text processing to ensure "Turbo Mode" performance.
-- **Encoding:** We use the local `LxCharset` module for intelligent file encoding detection with console feedback.
-  - API contract used by LxNotes is documented in `docs/LXCHARSET_API.md`.
+- Encoding detection in LxNotes is done through local `LxCharset`, not external `chardet`.
+- `FileHandler` expects a stable API from `LxCharset`.
+- Full contract is documented in `docs/LXCHARSET_API.md`.
+- If you change `LxCharset` internals, keep this contract stable to avoid LxNotes-side edits.
 
-### Local checks
+## Local Development
 
-Run before PR:
+1. Create a branch from current main/stable line.
+2. Make focused changes (one concern per PR).
+3. Run checks locally:
 
 ```bash
 ./scripts/run_checks.sh
 ```
 
----
+4. Confirm app behavior manually:
+- start app
+- open/save files
+- verify F12 console logs
+- verify charset detection logs during file-open
 
-## 🌍 Localization (Adding New Languages)
+## CI
 
-We want LxNotes to speak every language! Here is how the system works:
+- GitHub Actions workflow: `.github/workflows/lxnotes-ci.yml`
+- CI runs `./scripts/run_checks.sh` on push/PR.
+- Keep CI green before requesting review.
 
-### 1. The JSON Files
-All translations live in the `/languages` directory. To add a new language:
-- Copy an existing file (e.g., `en-us.json`).
-- Rename it using the standard locale code (e.g., `fr-fr.json` for French).
-- Translate the values, but **do not change the keys**.
+## Localization
 
-### 2. Mapping Filenames to Human Names
-The app needs to know that `en-us.json` should be displayed as "English" in the UI.
-- Locate the **`settings_dialog.py`** class (ui/dialogs/).
-- Find the `languages` list (a list of tuples).
-- Add your language in this format: `("Human Readable Name", "locale-code")`.
-  
-**Example:**
-```python
-languages = [
-    ("English", "en-us"),
-    ("Polski", "pl-pl"),
-    ("Italiano", "it-it") # Add yours here!
-]
+Translations are in `assets/languages`.
+
+Rules:
+- copy an existing locale file, e.g. `en-us.json`
+- rename to target locale code, e.g. `fr-fr.json`
+- translate only values, keep keys unchanged
+
+Language list shown in settings must include the new locale mapping in `ui/dialogs/settings_dialog.py`.
+
+## PR Quality Expectations
+
+- No unrelated refactors in the same PR.
+- Keep logs meaningful; avoid noisy debug leftovers.
+- Preserve backward compatibility for config/session behavior.
+- Update `README.md` and/or `docs/` when behavior or contracts change.
