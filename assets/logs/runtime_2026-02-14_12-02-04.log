@@ -1,0 +1,41 @@
+2026-02-14 12:02:04,556 [INFO] [runtime] Runtime logging initialized.
+2026-02-14 12:02:04,624 [INFO] [boot] 🌐 Platform: Linux | Session: wayland
+2026-02-14 12:02:04,627 [INFO] [boot] ⚙️ RTLD_GLOBAL enabled (C++ symbols optimization).
+2026-02-14 12:02:04,629 [INFO] [boot] 🖥️ Detected DE: KDE
+2026-02-14 12:02:04,629 [INFO] [boot] Checking Engine components...
+2026-02-14 12:02:04,675 [INFO] [boot] ℹ️ Engine build: up to date
+2026-02-14 12:02:04,676 [INFO] [boot] Launching UI...
+2026-02-14 12:02:04,700 [INFO] [console] Console Logic Initialized
+2026-02-14 12:02:04,704 [INFO] [console] C++ Engine bridge established.
+2026-02-14 12:02:04,705 [INFO] [console] 🌐 Platform: Linux | Session: wayland
+2026-02-14 12:02:04,706 [INFO] [console] ⚙️ RTLD_GLOBAL enabled (C++ symbols optimization).
+2026-02-14 12:02:04,708 [INFO] [console] 🖥️ Detected DE: KDE
+2026-02-14 12:02:04,709 [INFO] [console] Checking Engine components...
+2026-02-14 12:02:04,710 [INFO] [console] ℹ️ Engine build: up to date
+2026-02-14 12:02:04,711 [INFO] [console] Launching UI...
+2026-02-14 12:02:04,713 [INFO] [console] Initializing EditorManager with Evergreen UI...
+2026-02-14 12:02:04,718 [DEBUG] [console] EditorTab: Evergreen core initialized.
+2026-02-14 12:02:04,719 [INFO] [console] New tab created: 'Untitled'
+2026-02-14 12:02:04,721 [DEBUG] [core.theme.theme_manager] Styles directory detected: /home/Nefiu/Pulpit/LxNotes/assets/styles
+2026-02-14 12:02:04,721 [INFO] [core.file.recent_files] Loaded 10 recent files from history.
+2026-02-14 12:02:04,730 [INFO] [core.theme.theme_manager] Theme 'dark' applied successfully.
+2026-02-14 12:02:04,731 [INFO] [console] Session: Restoring 1 files...
+2026-02-14 12:02:04,732 [INFO] [console] Manager connected to UI Console. DE: KDE
+2026-02-14 12:02:04,734 [INFO] [console] LxNotes ready. Theme: dark
+2026-02-14 12:02:04,754 [DEBUG] [console] [LxCharset] detect:start: Starting detect_encoding | size=30851737
+2026-02-14 12:02:04,912 [DEBUG] [console] [LxCharset] detect:early-exit-check: Running early-exit precheck | size=30851737
+2026-02-14 12:02:04,944 [DEBUG] [console] [LxCharset] core:start: Core detection started | size=4096
+2026-02-14 12:02:04,976 [DEBUG] [console] [LxCharset] core:utf8: UTF-8 DFA validation passed | confidence=0.97
+2026-02-14 12:02:05,008 [DEBUG] [console] [LxCharset] detect:early-exit-miss: Early-exit threshold not reached; analyzing full payload | confidence=0.97, threshold=0.98
+2026-02-14 12:02:05,040 [DEBUG] [console] [LxCharset] core:start: Core detection started | size=30851737
+2026-02-14 12:02:05,914 [DEBUG] [console] [LxCharset] core:utf8: UTF-8 DFA validation passed | confidence=0.97
+2026-02-14 12:02:05,931 [INFO] [console] [LxCharset] detect:final: Detection finished | encoding=utf-8, confidence=0.97, used_fallback=False, detected_by_bom=False
+2026-02-14 12:02:05,932 [INFO] [console] [LxCharset] detect:result: Detection finished | encoding=utf-8, confidence=0.97, used_fallback=False, detected_by_bom=False
+2026-02-14 12:02:05,933 [INFO] [console] LxCharset detected encoding for hello world.txt: utf-8 (97.0%)
+2026-02-14 12:02:05,934 [INFO] [console] Decoded using lx_engine: utf-8 | fallback=False | attempts=['utf-8', 'utf-8-sig', 'utf-16', 'cp1250', 'latin-1', 'iso-8859-2']
+2026-02-14 12:02:05,936 [INFO] [console] Large file detected (30851737 chars). Invoking lx_engine C++...
+2026-02-14 12:02:06,061 [DEBUG] [console] EditorTab: Evergreen core initialized.
+2026-02-14 12:02:06,064 [INFO] [console] New tab created: 'hello world.txt'
+2026-02-14 12:02:06,819 [INFO] [console] TURBO MODE ACTIVE: RichText/Wrap disabled. Engine acceleration ready.
+2026-02-14 12:02:06,821 [DEBUG] [core.file.recent_files] Recent files list updated in /home/Nefiu/.lxnotes_recent.json
+2026-02-14 12:02:06,821 [INFO] [console] Session: Restored hello world.txt

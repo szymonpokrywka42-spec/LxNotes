@@ -1,0 +1,298 @@
+/* LxNotes light - Windows 11 inspired, custom palette */
+/* Palette:
+   #051F20 #0B2B26 #163832 #235347 #8EB69B #DAF1DE
+*/
+
+QWidget {
+    color: #163832;
+    font-family: "Segoe UI", "Noto Sans", sans-serif;
+    font-size: 10.5pt;
+}
+
+QMainWindow, QDialog, QWidget#AboutDialog {
+    background-color: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: 1,
+        stop: 0 #DAF1DE,
+        stop: 0.5 #d0e8d5,
+        stop: 1 #b8d4c0
+    );
+}
+
+QWidget#centralWidget {
+    background-color: qlineargradient(
+        x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 rgba(218, 241, 222, 248),
+        stop: 1 rgba(205, 230, 214, 252)
+    );
+}
+
+QMenuBar {
+    background-color: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: 0,
+        stop: 0 rgba(218, 241, 222, 250),
+        stop: 1 rgba(184, 212, 192, 245)
+    );
+    color: #163832;
+    border-bottom: none;
+    spacing: 4px;
+    padding: 4px 8px;
+}
+
+QMenuBar::item {
+    background: transparent;
+    border-radius: 6px;
+    padding: 6px 10px;
+}
+
+QMenuBar::item:selected {
+    background-color: #b7d4bf;
+}
+
+QMenuBar::item:pressed {
+    background-color: #8EB69B;
+}
+
+QMenu {
+    background-color: rgba(231, 247, 235, 250);
+    color: #163832;
+    border: 1px solid #8EB69B;
+    border-radius: 10px;
+    padding: 6px;
+}
+
+QMenu::item {
+    border-radius: 6px;
+    padding: 7px 12px;
+    color: #163832;
+}
+
+QMenu::item:selected {
+    background-color: #8EB69B;
+    color: #051F20;
+}
+
+QTabWidget::pane {
+    border: 1px solid #6e9f86;
+    border-top: none;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    margin-top: 0px;
+    background-color: rgba(231, 247, 235, 250);
+}
+
+QTabWidget::tab-bar {
+    left: -1px;
+}
+
+QTabBar {
+    border: none;
+    qproperty-drawBase: 0;
+    margin: 0px;
+    padding: 0px;
+}
+
+QTabBar::tab {
+    background: #b9d8c2;
+    color: #163832;
+    border: 1px solid #5f8f78;
+    border-bottom: 1px solid #6e9f86;
+    border-top-left-radius: 9px;
+    border-top-right-radius: 9px;
+    padding: 8px 16px;
+    margin-right: 0px;
+    margin-top: 2px;
+    min-height: 20px;
+}
+
+QTabBar::tab:first {
+    margin-left: 0px;
+}
+
+QTabBar::tab:selected {
+    background: #DAF1DE;
+    color: #051F20;
+    font-weight: 600;
+    margin-top: 0px;
+    border-color: #235347;
+    border-bottom: 1px solid rgba(231, 247, 235, 250);
+    border-right-color: #235347;
+    border-left-color: #235347;
+}
+
+QTabBar::tab:hover:!selected {
+    background: #cde5d5;
+    border-color: #4f7d69;
+}
+
+QPlainTextEdit, QTextEdit {
+    background-color: rgba(236, 250, 240, 252);
+    color: #051F20;
+    border: 1px solid #8EB69B;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    padding: 12px;
+    selection-background-color: #8EB69B;
+    selection-color: #051F20;
+}
+
+QStatusBar {
+    background-color: qlineargradient(
+        x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 rgba(184, 212, 192, 245),
+        stop: 1 rgba(158, 194, 170, 250)
+    );
+    color: #163832;
+    border-top: none;
+    padding: 2px 8px;
+}
+
+QStatusBar::item {
+    border: none;
+}
+
+QLabel#engineStatusLabel,
+QLabel#turboStatusLabel {
+    background-color: #d5ebdc;
+    border: 1px solid #8EB69B;
+    border-radius: 8px;
+    padding: 3px 8px;
+    font-weight: 600;
+    color: #163832;
+    margin-right: 8px;
+}
+
+QLabel#engineStatusLabel[engineState="cpp"] {
+    background-color: #c8e4d1;
+    color: #0B2B26;
+    border: 1px solid #235347;
+}
+
+QLabel#engineStatusLabel[engineState="python"] {
+    background-color: #d8eee0;
+    color: #163832;
+    border: 1px solid #8EB69B;
+}
+
+QPushButton {
+    background-color: #d5ebdc;
+    color: #163832;
+    border: 1px solid #8EB69B;
+    border-radius: 8px;
+    padding: 7px 14px;
+}
+
+QPushButton:hover {
+    background-color: #c3e0cd;
+}
+
+QPushButton:pressed {
+    background-color: #b3d3bf;
+}
+
+QPushButton#primaryButton,
+QPushButton#applyButton {
+    background-color: #235347;
+    color: #DAF1DE;
+    border: 1px solid #163832;
+}
+
+QPushButton#secondaryButton {
+    background-color: #DAF1DE;
+    color: #163832;
+}
+
+QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox, QListWidget {
+    background-color: #edf9f0;
+    color: #051F20;
+    border: 1px solid #8EB69B;
+    border-radius: 8px;
+    padding: 6px 8px;
+}
+
+QLineEdit:focus, QComboBox:focus, QListWidget:focus, QPlainTextEdit:focus, QTextEdit:focus {
+    border: 1px solid #235347;
+}
+
+QComboBox {
+    padding-right: 28px;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 22px;
+    border-left: 1px solid #8EB69B;
+}
+
+QComboBox QAbstractItemView,
+QListView,
+QListWidget {
+    background-color: #edf9f0;
+    color: #051F20;
+    border: 1px solid #8EB69B;
+    selection-background-color: #8EB69B;
+    selection-color: #051F20;
+    outline: none;
+}
+
+QComboBox QAbstractItemView::item,
+QListView::item,
+QListWidget::item {
+    color: #051F20;
+    background: transparent;
+    min-height: 22px;
+    padding: 4px 8px;
+}
+
+QComboBox QAbstractItemView::item:selected,
+QListView::item:selected,
+QListWidget::item:selected {
+    color: #051F20;
+    background: #8EB69B;
+}
+
+QFrame#settingsSeparator {
+    background: transparent;
+    max-height: 0px;
+    min-height: 0px;
+    border: none;
+}
+
+QLabel#sectionHeader {
+    color: #0B2B26;
+    font-size: 11pt;
+    font-weight: 600;
+}
+
+QScrollBar:vertical, QScrollBar:horizontal {
+    background: #dff2e5;
+    border: none;
+    margin: 0;
+}
+
+QScrollBar:vertical {
+    width: 12px;
+}
+
+QScrollBar:horizontal {
+    height: 12px;
+}
+
+QScrollBar::handle:vertical, QScrollBar::handle:horizontal {
+    background: #8EB69B;
+    border-radius: 6px;
+    min-height: 24px;
+    min-width: 24px;
+}
+
+QScrollBar::handle:vertical:hover, QScrollBar::handle:horizontal:hover {
+    background: #235347;
+}
+
+QScrollBar::add-line, QScrollBar::sub-line,
+QScrollBar::add-page, QScrollBar::sub-page {
+    background: transparent;
+    border: none;
+}

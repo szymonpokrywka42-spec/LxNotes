@@ -1,0 +1,443 @@
+[09:12:23] [SYSTEM] Console Logic Initialized
+[09:12:23] [SYSTEM] C++ Engine bridge established.
+[09:12:23] [BOOT] 🌐 Platform: Linux | Session: wayland
+[09:12:23] [BOOT] ⚙️ RTLD_GLOBAL enabled (C++ symbols optimization).
+[09:12:23] [BOOT] 🖥️ Detected DE: KDE
+[09:12:23] [BOOT] Checking Engine components...
+[09:12:23] [BOOT] ℹ️ Engine build: up to date
+[09:12:23] [BOOT] Launching UI...
+[09:12:23] [SYSTEM] Initializing EditorManager with Evergreen UI...
+[09:12:23] [DEBUG] EditorTab: Evergreen core initialized.
+[09:12:23] [EDITOR] New tab created: 'Untitled'
+[09:12:23] [SUCCESS] Manager connected to UI Console. DE: KDE
+[09:12:23] [SYSTEM] LxNotes ready. Theme: dark
+[09:20:48] [SYSTEM] Console Logic Initialized
+[09:20:48] [SYSTEM] C++ Engine bridge established.
+[09:20:48] [BOOT] 🌐 Platform: Linux | Session: wayland
+[09:20:48] [BOOT] ⚙️ RTLD_GLOBAL enabled (C++ symbols optimization).
+[09:20:48] [BOOT] 🖥️ Detected DE: KDE
+[09:20:48] [BOOT] Checking Engine components...
+[09:20:48] [BOOT] ℹ️ Engine build: up to date
+[09:20:48] [BOOT] Launching UI...
+[09:20:48] [SYSTEM] Initializing EditorManager with Evergreen UI...
+[09:20:48] [DEBUG] EditorTab: Evergreen core initialized.
+[09:20:48] [EDITOR] New tab created: 'Untitled'
+[09:20:48] [SUCCESS] Manager connected to UI Console. DE: KDE
+[09:20:48] [SYSTEM] LxNotes ready. Theme: dark
+[09:20:56] [SUCCESS] Język zmieniony na: PL-PL
+[09:21:01] [SUCCESS] Język zmieniony na: PL-PL
+[09:21:20] [SUCCESS] Język zmieniony na: PL-PL
+[09:21:26] [SUCCESS] Język zmieniony na: PL-PL
+[09:21:39] [ACTION] > help
+[09:21:42] [ACTION] > logs
+[09:21:44] [ACTION] > logs
+[09:22:07] [SYSTEM] Console Logic Initialized
+[09:22:07] [SYSTEM] C++ Engine bridge established.
+[09:22:07] [BOOT] 🌐 Platform: Linux | Session: wayland
+[09:22:07] [BOOT] ⚙️ RTLD_GLOBAL enabled (C++ symbols optimization).
+[09:22:07] [BOOT] 🖥️ Detected DE: KDE
+[09:22:07] [BOOT] Checking Engine components...
+[09:22:07] [BOOT] ℹ️ Engine build: up to date
+[09:22:07] [BOOT] Launching UI...
+[09:22:07] [SYSTEM] Initializing EditorManager with Evergreen UI...
+[09:22:07] [DEBUG] EditorTab: Evergreen core initialized.
+[09:22:07] [EDITOR] New tab created: 'Untitled'
+[09:22:07] [SUCCESS] Manager connected to UI Console. DE: KDE
+[09:22:07] [SYSTEM] LxNotes ready. Theme: dark
+[09:22:17] [ACTION] > help
+[09:22:20] [ACTION] > sys
+[09:22:28] [ACTION] > turbo
+[09:22:33] [ACTION] > crash
+[09:22:33] [WARN] Manual crash test triggered.
+[09:22:33] [ERROR] Intercepted: division by zero
+[09:22:37] [ACTION] > logs
+[09:23:07] [UI] Opening file dialog...
+[09:24:39] [ACTION] > open /home/Nefiu/Pulpit/hello world
+[09:24:39] [FILE] Attempting to open: /home/Nefiu/Pulpit/hello world
+[09:24:39] [INFO] Detecting encoding for hello world: ascii (100.0%)
+[09:24:39] [INFO] Decoded using lx_engine: utf-8 | fallback=False | attempts=['ascii', 'utf-8', 'utf-8-sig', 'utf-16', 'cp1250', 'latin-1', 'iso-8859-2']
+[09:24:39] [ENGINE] Large file detected (1023265 chars). Invoking lx_engine C++...
+[09:24:39] [DEBUG] EditorTab: Evergreen core initialized.
+[09:24:39] [EDITOR] New tab created: 'hello world'
+[09:24:39] [ENGINE] TURBO MODE ACTIVE: RichText/Wrap disabled. Engine acceleration ready.
+[09:24:39] [ENGINE] Turbo Mode enabled.
+[09:24:39] [SUCCESS] File loaded successfully: /home/Nefiu/Pulpit/hello world
+[09:27:03] [SUCCESS] Język zmieniony na: PL-PL
+[09:27:08] [SYSTEM] Autosaved 1 file(s).
+[09:27:18] [FILE] Starting async save to: /home/Nefiu/Pulpit/hello world
+[09:27:18] [SUCCESS] Save completed: /home/Nefiu/Pulpit/hello world
+[09:27:43] [SYSTEM] Console Logic Initialized
+[09:27:43] [SYSTEM] C++ Engine bridge established.
+[09:27:43] [BOOT] 🌐 Platform: Linux | Session: wayland
+[09:27:43] [BOOT] ⚙️ RTLD_GLOBAL enabled (C++ symbols optimization).
+[09:27:43] [BOOT] 🖥️ Detected DE: KDE
+[09:27:43] [BOOT] Checking Engine components...
+[09:27:43] [BOOT] ℹ️ Engine build: up to date
+[09:27:43] [BOOT] Launching UI...
+[09:27:43] [SYSTEM] Initializing EditorManager with Evergreen UI...
+[09:27:43] [DEBUG] EditorTab: Evergreen core initialized.
+[09:27:43] [EDITOR] New tab created: 'Untitled'
+[09:27:43] [SYSTEM] Session: Restoring 1 files...
+[09:27:43] [SUCCESS] Manager connected to UI Console. DE: KDE
+[09:27:43] [SYSTEM] LxNotes ready. Theme: dark
+[09:27:49] [INFO] Detecting encoding for hello world: ascii (100.0%)
+[09:27:49] [INFO] Decoded using lx_engine: utf-8 | fallback=False | attempts=['ascii', 'utf-8', 'utf-8-sig', 'utf-16', 'cp1250', 'latin-1', 'iso-8859-2']
+[09:27:49] [ENGINE] Large file detected (30728640 chars). Invoking lx_engine C++...
+[09:27:49] [DEBUG] EditorTab: Evergreen core initialized.
+[09:27:49] [EDITOR] New tab created: 'hello world'
+[09:27:50] [ENGINE] TURBO MODE ACTIVE: RichText/Wrap disabled. Engine acceleration ready.
+[09:27:50] [SUCCESS] Session: Restored hello world
+[09:28:11] [FILE] Starting async save to: /home/Nefiu/Pulpit/hello world
+[09:28:11] [SUCCESS] Save completed: /home/Nefiu/Pulpit/hello world
+[09:28:40] [FILE] Starting async save to: /home/Nefiu/Pulpit/fg3ewfwefe
+[09:28:40] [SUCCESS] Save completed: /home/Nefiu/Pulpit/fg3ewfwefe
+[09:31:07] [SYSTEM] Console Logic Initialized
+[09:31:07] [ACTION] > logs
+[09:31:07] [SYSTEM] Console Logic Initialized
+[09:31:07] [SYSTEM] C++ Engine bridge established.
+[09:31:07] [SYSTEM] Initializing EditorManager with Evergreen UI...
+[09:31:07] [DEBUG] EditorTab: Evergreen core initialized.
+[09:31:07] [EDITOR] New tab created: 'Untitled'
+[09:31:07] [SYSTEM] LxNotes ready. Theme: light
+[09:31:34] [SYSTEM] Console Logic Initialized
+[09:31:34] [SYSTEM] C++ Engine bridge established.
+[09:31:34] [SYSTEM] Initializing EditorManager with Evergreen UI...
+[09:31:34] [DEBUG] EditorTab: Evergreen core initialized.
+[09:31:34] [EDITOR] New tab created: 'Untitled'
+[09:31:34] [SYSTEM] LxNotes ready. Theme: light
+[09:31:34] [FILE] Starting async save to: /tmp/lxnotes_save_42hom3sm.txt
+[09:33:41] [SYSTEM] Console Logic Initialized
+[09:33:41] [SYSTEM] C++ Engine bridge established.
+[09:33:41] [BOOT] 🌐 Platform: Linux | Session: wayland
+[09:33:41] [BOOT] ⚙️ RTLD_GLOBAL enabled (C++ symbols optimization).
+[09:33:41] [BOOT] 🖥️ Detected DE: KDE
+[09:33:41] [BOOT] Checking Engine components...
+[09:33:41] [BOOT] ℹ️ Engine build: up to date
+[09:33:41] [BOOT] Launching UI...
+[09:33:41] [SYSTEM] Initializing EditorManager with Evergreen UI...
+[09:33:41] [DEBUG] EditorTab: Evergreen core initialized.
+[09:33:41] [EDITOR] New tab created: 'Untitled'
+[09:33:41] [SUCCESS] Manager connected to UI Console. DE: KDE
+[09:33:41] [SYSTEM] LxNotes ready. Theme: dark
+[09:33:46] [ACTION] > logs
+[09:33:51] [ACTION] > logs
+[09:33:59] [ACTION] > logs
+[09:34:05] [ACTION] > test
+[09:34:08] [ACTION] > help
+[09:34:27] [ACTION] > open file:///home/Nefiu/Pulpit/hello world
+[09:34:27] [FILE] Attempting to open: file:///home/Nefiu/Pulpit/hello world
+[09:34:27] [ERROR] Operation failed: Plik nie istnieje: file:///home/Nefiu/Pulpit/hello world
+[09:34:27] [CRITICAL] Worker Error: Plik nie istnieje: file:///home/Nefiu/Pulpit/hello world
+[09:34:37] [ACTION] > open /home/Nefiu/Pulpit/hello world
+[09:34:37] [FILE] Attempting to open: /home/Nefiu/Pulpit/hello world
+[09:34:43] [INFO] Detecting encoding for hello world: ascii (100.0%)
+[09:34:43] [INFO] Decoded using lx_engine: utf-8 | fallback=False | attempts=['ascii', 'utf-8', 'utf-8-sig', 'utf-16', 'cp1250', 'latin-1', 'iso-8859-2']
+[09:34:43] [ENGINE] Large file detected (30759368 chars). Invoking lx_engine C++...
+[09:34:43] [DEBUG] EditorTab: Evergreen core initialized.
+[09:34:43] [EDITOR] New tab created: 'hello world'
+[09:34:44] [ENGINE] TURBO MODE ACTIVE: RichText/Wrap disabled. Engine acceleration ready.
+[09:34:44] [ENGINE] Turbo Mode enabled.
+[09:34:44] [SUCCESS] File loaded successfully: /home/Nefiu/Pulpit/hello world
+[09:35:33] [FILE] Starting async save to: /home/Nefiu/Pulpit/gergerg
+[09:35:33] [SUCCESS] Save completed: /home/Nefiu/Pulpit/gergerg
+[09:35:48] [FILE] Starting async save to: /home/Nefiu/Pulpit/gergerg
+[09:35:48] [SUCCESS] Save completed: /home/Nefiu/Pulpit/gergerg
+[09:36:07] [FILE] Starting async save to: /home/Nefiu/Pulpit/hello world
+[09:36:07] [SUCCESS] Save completed: /home/Nefiu/Pulpit/hello world
+[09:37:39] [SYSTEM] Console Logic Initialized
+[09:37:39] [SYSTEM] C++ Engine bridge established.
+[09:37:39] [SYSTEM] Initializing EditorManager with Evergreen UI...
+[09:37:39] [DEBUG] EditorTab: Evergreen core initialized.
+[09:37:39] [EDITOR] New tab created: 'Untitled'
+[09:37:39] [SYSTEM] LxNotes ready. Theme: light
+[09:37:39] [FILE] Starting async save to: /tmp/lxnotes_overwrite_idyi37h9.txt
+[09:37:39] [SUCCESS] Save completed: /tmp/lxnotes_overwrite_idyi37h9.txt
+[09:44:55] [SYSTEM] Console Logic Initialized
+[09:44:55] [SYSTEM] C++ Engine bridge established.
+[09:44:55] [BOOT] 🌐 Platform: Linux | Session: wayland
+[09:44:55] [BOOT] ⚙️ RTLD_GLOBAL enabled (C++ symbols optimization).
+[09:44:55] [BOOT] 🖥️ Detected DE: KDE
+[09:44:55] [BOOT] Checking Engine components...
+[09:44:55] [BOOT] ℹ️ Engine build: up to date
+[09:44:55] [BOOT] Launching UI...
+[09:44:55] [SYSTEM] Initializing EditorManager with Evergreen UI...
+[09:44:55] [DEBUG] EditorTab: Evergreen core initialized.
+[09:44:55] [EDITOR] New tab created: 'Untitled'
+[09:44:56] [SUCCESS] Manager connected to UI Console. DE: KDE
+[09:44:56] [SYSTEM] LxNotes ready. Theme: light
+[09:45:00] [SYSTEM] Console Logic Initialized
+[09:45:00] [SYSTEM] C++ Engine bridge established.
+[09:45:00] [BOOT] 🌐 Platform: Linux | Session: wayland
+[09:45:00] [BOOT] ⚙️ RTLD_GLOBAL enabled (C++ symbols optimization).
+[09:45:00] [BOOT] 🖥️ Detected DE: KDE
+[09:45:00] [BOOT] Checking Engine components...
+[09:45:00] [BOOT] ℹ️ Engine build: up to date
+[09:45:00] [BOOT] Launching UI...
+[09:45:00] [SYSTEM] Initializing EditorManager with Evergreen UI...
+[09:45:00] [DEBUG] EditorTab: Evergreen core initialized.
+[09:45:00] [EDITOR] New tab created: 'Untitled'
+[09:45:00] [SYSTEM] Session: Restoring 1 files...
+[09:45:00] [SUCCESS] Manager connected to UI Console. DE: KDE
+[09:45:00] [SYSTEM] LxNotes ready. Theme: dark
+[09:45:06] [INFO] Detecting encoding for hello world: ascii (100.0%)
+[09:45:06] [INFO] Decoded using lx_engine: utf-8 | fallback=False | attempts=['ascii', 'utf-8', 'utf-8-sig', 'utf-16', 'cp1250', 'latin-1', 'iso-8859-2']
+[09:45:06] [ENGINE] Large file detected (30790127 chars). Invoking lx_engine C++...
+[09:45:06] [DEBUG] EditorTab: Evergreen core initialized.
+[09:45:06] [EDITOR] New tab created: 'hello world'
+[09:45:26] [ACTION] > open /home/Nefiu/Pulpit/gergerg
+[09:45:26] [FILE] Attempting to open: /home/Nefiu/Pulpit/gergerg
+[09:45:32] [INFO] Detecting encoding for gergerg: ascii (100.0%)
+[09:45:32] [INFO] Decoded using lx_engine: utf-8 | fallback=False | attempts=['ascii', 'utf-8', 'utf-8-sig', 'utf-16', 'cp1250', 'latin-1', 'iso-8859-2']
+[09:45:32] [ENGINE] Large file detected (30790127 chars). Invoking lx_engine C++...
+[09:45:32] [DEBUG] EditorTab: Evergreen core initialized.
+[09:45:32] [EDITOR] New tab created: 'gergerg'
+[09:45:33] [ENGINE] TURBO MODE ACTIVE: RichText/Wrap disabled. Engine acceleration ready.
+[09:45:33] [ENGINE] Turbo Mode enabled.
+[09:45:33] [SUCCESS] File loaded successfully: /home/Nefiu/Pulpit/gergerg
+[09:45:51] [FILE] Starting async save to: /home/Nefiu/Pulpit/gergerg
+[09:45:51] [SUCCESS] Save completed: /home/Nefiu/Pulpit/gergerg
+[09:46:39] [SYSTEM] Console Logic Initialized
+[09:46:39] [SYSTEM] C++ Engine bridge established.
+[09:46:39] [BOOT] 🌐 Platform: Linux | Session: wayland
+[09:46:39] [BOOT] ⚙️ RTLD_GLOBAL enabled (C++ symbols optimization).
+[09:46:39] [BOOT] 🖥️ Detected DE: KDE
+[09:46:39] [BOOT] Checking Engine components...
+[09:46:39] [BOOT] ℹ️ Engine build: up to date
+[09:46:39] [BOOT] Launching UI...
+[09:46:39] [SYSTEM] Initializing EditorManager with Evergreen UI...
+[09:46:39] [DEBUG] EditorTab: Evergreen core initialized.
+[09:46:39] [EDITOR] New tab created: 'Untitled'
+[09:46:39] [SUCCESS] Manager connected to UI Console. DE: KDE
+[09:46:39] [SYSTEM] LxNotes ready. Theme: dark
+[09:46:43] [UI] Opening file dialog...
+[09:46:50] [FILE] Attempting to open: /home/Nefiu/Pulpit/gergerg
+[09:46:50] [SUCCESS] Loaded: gergerg
+[09:46:56] [INFO] Detecting encoding for gergerg: ascii (100.0%)
+[09:46:56] [INFO] Decoded using lx_engine: utf-8 | fallback=False | attempts=['ascii', 'utf-8', 'utf-8-sig', 'utf-16', 'cp1250', 'latin-1', 'iso-8859-2']
+[09:46:56] [ENGINE] Large file detected (30820917 chars). Invoking lx_engine C++...
+[09:46:56] [DEBUG] EditorTab: Evergreen core initialized.
+[09:46:56] [EDITOR] New tab created: 'gergerg'
+[09:46:57] [ENGINE] TURBO MODE ACTIVE: RichText/Wrap disabled. Engine acceleration ready.
+[09:46:57] [ENGINE] Turbo Mode enabled.
+[09:46:57] [SUCCESS] File loaded successfully: /home/Nefiu/Pulpit/gergerg
+[09:47:09] [SYSTEM] Console Logic Initialized
+[09:47:09] [SYSTEM] C++ Engine bridge established.
+[09:47:09] [BOOT] 🌐 Platform: Linux | Session: wayland
+[09:47:09] [BOOT] ⚙️ RTLD_GLOBAL enabled (C++ symbols optimization).
+[09:47:09] [BOOT] 🖥️ Detected DE: KDE
+[09:47:09] [BOOT] Checking Engine components...
+[09:47:09] [BOOT] ℹ️ Engine build: up to date
+[09:47:09] [BOOT] Launching UI...
+[09:47:09] [SYSTEM] Initializing EditorManager with Evergreen UI...
+[09:47:09] [DEBUG] EditorTab: Evergreen core initialized.
+[09:47:09] [EDITOR] New tab created: 'Untitled'
+[09:47:10] [SUCCESS] Manager connected to UI Console. DE: KDE
+[09:47:10] [SYSTEM] LxNotes ready. Theme: dark
+[09:47:51] [SYSTEM] Console Logic Initialized
+[09:47:51] [SYSTEM] C++ Engine bridge established.
+[09:47:51] [BOOT] 🌐 Platform: Linux | Session: wayland
+[09:47:51] [BOOT] ⚙️ RTLD_GLOBAL enabled (C++ symbols optimization).
+[09:47:51] [BOOT] 🖥️ Detected DE: KDE
+[09:47:51] [BOOT] Checking Engine components...
+[09:47:51] [BOOT] ℹ️ Engine build: up to date
+[09:47:51] [BOOT] Launching UI...
+[09:47:51] [SYSTEM] Initializing EditorManager with Evergreen UI...
+[09:47:51] [DEBUG] EditorTab: Evergreen core initialized.
+[09:47:51] [EDITOR] New tab created: 'Untitled'
+[09:47:51] [SUCCESS] Manager connected to UI Console. DE: KDE
+[09:47:51] [SYSTEM] LxNotes ready. Theme: light
+[09:48:50] [SYSTEM] Console Logic Initialized
+[09:48:50] [SYSTEM] C++ Engine bridge established.
+[09:48:50] [BOOT] 🌐 Platform: Linux | Session: wayland
+[09:48:50] [BOOT] ⚙️ RTLD_GLOBAL enabled (C++ symbols optimization).
+[09:48:50] [BOOT] 🖥️ Detected DE: KDE
+[09:48:50] [BOOT] Checking Engine components...
+[09:48:50] [BOOT] ℹ️ Engine build: up to date
+[09:48:50] [BOOT] Launching UI...
+[09:48:50] [SYSTEM] Initializing EditorManager with Evergreen UI...
+[09:48:50] [DEBUG] EditorTab: Evergreen core initialized.
+[09:48:50] [EDITOR] New tab created: 'Untitled'
+[09:48:50] [SUCCESS] Manager connected to UI Console. DE: KDE
+[09:48:50] [SYSTEM] LxNotes ready. Theme: light
+[09:48:55] [SYSTEM] Console Logic Initialized
+[09:48:55] [SYSTEM] C++ Engine bridge established.
+[09:48:55] [BOOT] 🌐 Platform: Linux | Session: wayland
+[09:48:55] [BOOT] ⚙️ RTLD_GLOBAL enabled (C++ symbols optimization).
+[09:48:55] [BOOT] 🖥️ Detected DE: KDE
+[09:48:55] [BOOT] Checking Engine components...
+[09:48:55] [BOOT] ℹ️ Engine build: up to date
+[09:48:55] [BOOT] Launching UI...
+[09:48:55] [SYSTEM] Initializing EditorManager with Evergreen UI...
+[09:48:55] [DEBUG] EditorTab: Evergreen core initialized.
+[09:48:55] [EDITOR] New tab created: 'Untitled'
+[09:48:55] [SUCCESS] Manager connected to UI Console. DE: KDE
+[09:48:55] [SYSTEM] LxNotes ready. Theme: dark
+[09:49:02] [UI] Opening file dialog...
+[09:49:13] [FILE] Attempting to open: /home/Nefiu/Pulpit/gergerg
+[09:49:13] [SUCCESS] Loaded: gergerg
+[09:49:19] [INFO] Detecting encoding for gergerg: ascii (100.0%)
+[09:49:19] [INFO] Decoded using lx_engine: utf-8 | fallback=False | attempts=['ascii', 'utf-8', 'utf-8-sig', 'utf-16', 'cp1250', 'latin-1', 'iso-8859-2']
+[09:49:19] [ENGINE] Large file detected (30820917 chars). Invoking lx_engine C++...
+[09:49:19] [DEBUG] EditorTab: Evergreen core initialized.
+[09:49:19] [EDITOR] New tab created: 'gergerg'
+[09:49:20] [ENGINE] TURBO MODE ACTIVE: RichText/Wrap disabled. Engine acceleration ready.
+[09:49:20] [ENGINE] Turbo Mode enabled.
+[09:49:20] [SUCCESS] File loaded successfully: /home/Nefiu/Pulpit/gergerg
+[09:49:33] [FILE] Starting async save to: /home/Nefiu/Pulpit/hello world.txt
+[09:49:33] [SUCCESS] Save completed: /home/Nefiu/Pulpit/hello world.txt
+[09:52:50] [SYSTEM] Console Logic Initialized
+[09:52:50] [SYSTEM] C++ Engine bridge established.
+[09:52:50] [BOOT] boot test msg
+[09:52:50] [SYSTEM] Initializing EditorManager with Evergreen UI...
+[09:52:50] [DEBUG] EditorTab: Evergreen core initialized.
+[09:52:50] [EDITOR] New tab created: 'Untitled'
+[09:52:50] [SYSTEM] LxNotes ready. Theme: light
+[09:52:50] [INFO] test runtime mirror
+[09:56:45] [SYSTEM] Console Logic Initialized
+[09:56:45] [SYSTEM] C++ Engine bridge established.
+[09:56:45] [BOOT] 🌐 Platform: Linux | Session: wayland
+[09:56:45] [BOOT] ⚙️ RTLD_GLOBAL enabled (C++ symbols optimization).
+[09:56:45] [BOOT] 🖥️ Detected DE: KDE
+[09:56:45] [BOOT] Checking Engine components...
+[09:56:45] [BOOT] ℹ️ Engine build: up to date
+[09:56:45] [BOOT] Launching UI...
+[09:56:45] [SYSTEM] Initializing EditorManager with Evergreen UI...
+[09:56:45] [DEBUG] EditorTab: Evergreen core initialized.
+[09:56:45] [EDITOR] New tab created: 'Untitled'
+[09:56:45] [SUCCESS] Manager connected to UI Console. DE: KDE
+[09:56:45] [SYSTEM] LxNotes ready. Theme: light
+[09:57:10] [SUCCESS] Język zmieniony na: PL-PL
+[10:08:57] [SYSTEM] Console Logic Initialized
+[10:08:57] [SYSTEM] C++ Engine bridge established.
+[10:08:57] [BOOT] 🌐 Platform: Linux | Session: wayland
+[10:08:57] [BOOT] ⚙️ RTLD_GLOBAL enabled (C++ symbols optimization).
+[10:08:57] [BOOT] 🖥️ Detected DE: KDE
+[10:08:57] [BOOT] Checking Engine components...
+[10:08:57] [BOOT] ℹ️ Engine build: up to date
+[10:08:57] [BOOT] Launching UI...
+[10:08:57] [SYSTEM] Initializing EditorManager with Evergreen UI...
+[10:08:57] [DEBUG] EditorTab: Evergreen core initialized.
+[10:08:57] [EDITOR] New tab created: 'Untitled'
+[10:08:57] [SYSTEM] Session: Restoring 1 files...
+[10:08:57] [SUCCESS] Manager connected to UI Console. DE: KDE
+[10:08:57] [SYSTEM] LxNotes ready. Theme: dark
+[11:06:35] [SYSTEM] Console Logic Initialized
+[11:06:35] [SYSTEM] C++ Engine bridge established.
+[11:06:35] [BOOT] 🌐 Platform: Linux | Session: wayland
+[11:06:35] [BOOT] ⚙️ RTLD_GLOBAL enabled (C++ symbols optimization).
+[11:06:35] [BOOT] 🖥️ Detected DE: KDE
+[11:06:35] [BOOT] Checking Engine components...
+[11:06:35] [BOOT] ℹ️ Engine build: up to date
+[11:06:35] [BOOT] Launching UI...
+[11:06:35] [SYSTEM] Initializing EditorManager with Evergreen UI...
+[11:06:35] [DEBUG] EditorTab: Evergreen core initialized.
+[11:06:35] [EDITOR] New tab created: 'Untitled'
+[11:06:35] [SUCCESS] Manager connected to UI Console. DE: KDE
+[11:06:35] [SYSTEM] LxNotes ready. Theme: dark
+[11:56:24] [SYSTEM] Console Logic Initialized
+[11:56:24] [SYSTEM] C++ Engine bridge established.
+[11:56:24] [BOOT] 🌐 Platform: Linux | Session: wayland
+[11:56:24] [BOOT] ⚙️ RTLD_GLOBAL enabled (C++ symbols optimization).
+[11:56:24] [BOOT] 🖥️ Detected DE: KDE
+[11:56:24] [BOOT] Checking Engine components...
+[11:56:24] [BOOT] ℹ️ Engine build: up to date
+[11:56:24] [BOOT] Launching UI...
+[11:56:24] [SYSTEM] Initializing EditorManager with Evergreen UI...
+[11:56:24] [DEBUG] EditorTab: Evergreen core initialized.
+[11:56:24] [EDITOR] New tab created: 'Untitled'
+[11:56:24] [SUCCESS] Manager connected to UI Console. DE: KDE
+[11:56:24] [SYSTEM] LxNotes ready. Theme: dark
+[11:56:41] [UI] Opening file dialog...
+[11:57:43] [SYSTEM] Console Logic Initialized
+[11:57:43] [SYSTEM] C++ Engine bridge established.
+[11:57:43] [BOOT] 🌐 Platform: Linux | Session: wayland
+[11:57:43] [BOOT] ⚙️ RTLD_GLOBAL enabled (C++ symbols optimization).
+[11:57:43] [BOOT] 🖥️ Detected DE: KDE
+[11:57:43] [BOOT] Checking Engine components...
+[11:57:43] [BOOT] ℹ️ Engine build: up to date
+[11:57:43] [BOOT] Launching UI...
+[11:57:43] [SYSTEM] Initializing EditorManager with Evergreen UI...
+[11:57:43] [DEBUG] EditorTab: Evergreen core initialized.
+[11:57:43] [EDITOR] New tab created: 'Untitled'
+[11:57:43] [SUCCESS] Manager connected to UI Console. DE: KDE
+[11:57:43] [SYSTEM] LxNotes ready. Theme: dark
+[11:57:50] [UI] Opening file dialog...
+[11:57:56] [FILE] Attempting to open: /home/Nefiu/Pulpit/hello world.txt
+[11:57:56] [SUCCESS] Loaded: hello world.txt
+[11:57:56] [DEBUG] [LxCharset] detect:start: Starting detect_encoding | size=30851737
+[11:57:56] [DEBUG] [LxCharset] detect:early-exit-check: Running early-exit precheck | size=30851737
+[11:57:56] [DEBUG] [LxCharset] core:start: Core detection started | size=4096
+[11:57:56] [DEBUG] [LxCharset] core:utf8: UTF-8 DFA validation passed | confidence=0.97
+[11:57:57] [DEBUG] [LxCharset] detect:early-exit-miss: Early-exit threshold not reached; analyzing full payload | confidence=0.97, threshold=0.98
+[11:57:57] [DEBUG] [LxCharset] core:start: Core detection started | size=30851737
+[11:57:58] [DEBUG] [LxCharset] core:utf8: UTF-8 DFA validation passed | confidence=0.97
+[11:57:58] [INFO] [LxCharset] detect:final: Detection finished | encoding=utf-8, confidence=0.97, used_fallback=False, detected_by_bom=False
+[11:57:58] [INFO] [LxCharset] detect:result: Detection finished | encoding=utf-8, confidence=0.97, used_fallback=False, detected_by_bom=False
+[11:57:58] [INFO] LxCharset detected encoding for hello world.txt: utf-8 (97.0%)
+[11:57:58] [INFO] Decoded using lx_engine: utf-8 | fallback=False | attempts=['utf-8', 'utf-8-sig', 'utf-16', 'cp1250', 'latin-1', 'iso-8859-2']
+[11:57:58] [ENGINE] Large file detected (30851737 chars). Invoking lx_engine C++...
+[11:57:58] [DEBUG] EditorTab: Evergreen core initialized.
+[11:57:58] [EDITOR] New tab created: 'hello world.txt'
+[11:57:58] [ENGINE] TURBO MODE ACTIVE: RichText/Wrap disabled. Engine acceleration ready.
+[11:57:58] [ENGINE] Turbo Mode enabled.
+[11:57:58] [SUCCESS] File loaded successfully: /home/Nefiu/Pulpit/hello world.txt
+[12:01:04] [SYSTEM] Console Logic Initialized
+[12:01:04] [SYSTEM] C++ Engine bridge established.
+[12:01:04] [BOOT] 🌐 Platform: Linux | Session: wayland
+[12:01:04] [BOOT] ⚙️ RTLD_GLOBAL enabled (C++ symbols optimization).
+[12:01:04] [BOOT] 🖥️ Detected DE: KDE
+[12:01:04] [BOOT] Checking Engine components...
+[12:01:04] [BOOT] ℹ️ Engine build: up to date
+[12:01:04] [BOOT] Launching UI...
+[12:01:04] [SYSTEM] Initializing EditorManager with Evergreen UI...
+[12:01:04] [DEBUG] EditorTab: Evergreen core initialized.
+[12:01:04] [EDITOR] New tab created: 'Untitled'
+[12:01:04] [SYSTEM] Session: Restoring 1 files...
+[12:01:04] [SUCCESS] Manager connected to UI Console. DE: KDE
+[12:01:04] [SYSTEM] LxNotes ready. Theme: dark
+[12:01:04] [DEBUG] [LxCharset] detect:start: Starting detect_encoding | size=30851737
+[12:01:04] [DEBUG] [LxCharset] detect:early-exit-check: Running early-exit precheck | size=30851737
+[12:01:04] [DEBUG] [LxCharset] core:start: Core detection started | size=4096
+[12:01:04] [DEBUG] [LxCharset] core:utf8: UTF-8 DFA validation passed | confidence=0.97
+[12:01:04] [DEBUG] [LxCharset] detect:early-exit-miss: Early-exit threshold not reached; analyzing full payload | confidence=0.97, threshold=0.98
+[12:01:04] [DEBUG] [LxCharset] core:start: Core detection started | size=30851737
+[12:01:05] [DEBUG] [LxCharset] core:utf8: UTF-8 DFA validation passed | confidence=0.97
+[12:01:05] [INFO] [LxCharset] detect:final: Detection finished | encoding=utf-8, confidence=0.97, used_fallback=False, detected_by_bom=False
+[12:01:05] [INFO] [LxCharset] detect:result: Detection finished | encoding=utf-8, confidence=0.97, used_fallback=False, detected_by_bom=False
+[12:01:05] [INFO] LxCharset detected encoding for hello world.txt: utf-8 (97.0%)
+[12:01:05] [INFO] Decoded using lx_engine: utf-8 | fallback=False | attempts=['utf-8', 'utf-8-sig', 'utf-16', 'cp1250', 'latin-1', 'iso-8859-2']
+[12:01:05] [ENGINE] Large file detected (30851737 chars). Invoking lx_engine C++...
+[12:01:05] [DEBUG] EditorTab: Evergreen core initialized.
+[12:01:05] [EDITOR] New tab created: 'hello world.txt'
+[12:01:06] [ENGINE] TURBO MODE ACTIVE: RichText/Wrap disabled. Engine acceleration ready.
+[12:01:06] [SUCCESS] Session: Restored hello world.txt
+[12:02:04] [SYSTEM] Console Logic Initialized
+[12:02:04] [SYSTEM] C++ Engine bridge established.
+[12:02:04] [BOOT] 🌐 Platform: Linux | Session: wayland
+[12:02:04] [BOOT] ⚙️ RTLD_GLOBAL enabled (C++ symbols optimization).
+[12:02:04] [BOOT] 🖥️ Detected DE: KDE
+[12:02:04] [BOOT] Checking Engine components...
+[12:02:04] [BOOT] ℹ️ Engine build: up to date
+[12:02:04] [BOOT] Launching UI...
+[12:02:04] [SYSTEM] Initializing EditorManager with Evergreen UI...
+[12:02:04] [DEBUG] EditorTab: Evergreen core initialized.
+[12:02:04] [EDITOR] New tab created: 'Untitled'
+[12:02:04] [SYSTEM] Session: Restoring 1 files...
+[12:02:04] [SUCCESS] Manager connected to UI Console. DE: KDE
+[12:02:04] [SYSTEM] LxNotes ready. Theme: dark
+[12:02:04] [DEBUG] [LxCharset] detect:start: Starting detect_encoding | size=30851737
+[12:02:04] [DEBUG] [LxCharset] detect:early-exit-check: Running early-exit precheck | size=30851737
+[12:02:04] [DEBUG] [LxCharset] core:start: Core detection started | size=4096
+[12:02:04] [DEBUG] [LxCharset] core:utf8: UTF-8 DFA validation passed | confidence=0.97
+[12:02:05] [DEBUG] [LxCharset] detect:early-exit-miss: Early-exit threshold not reached; analyzing full payload | confidence=0.97, threshold=0.98
+[12:02:05] [DEBUG] [LxCharset] core:start: Core detection started | size=30851737
+[12:02:05] [DEBUG] [LxCharset] core:utf8: UTF-8 DFA validation passed | confidence=0.97
+[12:02:05] [INFO] [LxCharset] detect:final: Detection finished | encoding=utf-8, confidence=0.97, used_fallback=False, detected_by_bom=False
+[12:02:05] [INFO] [LxCharset] detect:result: Detection finished | encoding=utf-8, confidence=0.97, used_fallback=False, detected_by_bom=False
+[12:02:05] [INFO] LxCharset detected encoding for hello world.txt: utf-8 (97.0%)
+[12:02:05] [INFO] Decoded using lx_engine: utf-8 | fallback=False | attempts=['utf-8', 'utf-8-sig', 'utf-16', 'cp1250', 'latin-1', 'iso-8859-2']
+[12:02:05] [ENGINE] Large file detected (30851737 chars). Invoking lx_engine C++...
+[12:02:06] [DEBUG] EditorTab: Evergreen core initialized.
+[12:02:06] [EDITOR] New tab created: 'hello world.txt'
+[12:02:06] [ENGINE] TURBO MODE ACTIVE: RichText/Wrap disabled. Engine acceleration ready.
+[12:02:06] [SUCCESS] Session: Restored hello world.txt

@@ -1,0 +1,1 @@
+"""LxCharset module package."""

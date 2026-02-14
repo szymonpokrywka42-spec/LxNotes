@@ -1,0 +1,9 @@
+{
+  "include": [
+    "core/python",
+    "logics/python"
+  ],
+  "extraPaths": [
+    "."
+  ]
+}

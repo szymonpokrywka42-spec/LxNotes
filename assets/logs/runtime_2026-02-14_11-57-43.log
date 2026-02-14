@@ -1,0 +1,44 @@
+2026-02-14 11:57:43,384 [INFO] [runtime] Runtime logging initialized.
+2026-02-14 11:57:43,451 [INFO] [boot] 🌐 Platform: Linux | Session: wayland
+2026-02-14 11:57:43,455 [INFO] [boot] ⚙️ RTLD_GLOBAL enabled (C++ symbols optimization).
+2026-02-14 11:57:43,456 [INFO] [boot] 🖥️ Detected DE: KDE
+2026-02-14 11:57:43,457 [INFO] [boot] Checking Engine components...
+2026-02-14 11:57:43,503 [INFO] [boot] ℹ️ Engine build: up to date
+2026-02-14 11:57:43,504 [INFO] [boot] Launching UI...
+2026-02-14 11:57:43,528 [INFO] [console] Console Logic Initialized
+2026-02-14 11:57:43,532 [INFO] [console] C++ Engine bridge established.
+2026-02-14 11:57:43,533 [INFO] [console] 🌐 Platform: Linux | Session: wayland
+2026-02-14 11:57:43,534 [INFO] [console] ⚙️ RTLD_GLOBAL enabled (C++ symbols optimization).
+2026-02-14 11:57:43,536 [INFO] [console] 🖥️ Detected DE: KDE
+2026-02-14 11:57:43,537 [INFO] [console] Checking Engine components...
+2026-02-14 11:57:43,538 [INFO] [console] ℹ️ Engine build: up to date
+2026-02-14 11:57:43,539 [INFO] [console] Launching UI...
+2026-02-14 11:57:43,541 [INFO] [console] Initializing EditorManager with Evergreen UI...
+2026-02-14 11:57:43,546 [DEBUG] [console] EditorTab: Evergreen core initialized.
+2026-02-14 11:57:43,548 [INFO] [console] New tab created: 'Untitled'
+2026-02-14 11:57:43,549 [DEBUG] [core.theme.theme_manager] Styles directory detected: /home/Nefiu/Pulpit/LxNotes/assets/styles
+2026-02-14 11:57:43,549 [INFO] [core.file.recent_files] Loaded 10 recent files from history.
+2026-02-14 11:57:43,558 [INFO] [core.theme.theme_manager] Theme 'dark' applied successfully.
+2026-02-14 11:57:43,558 [INFO] [console] Manager connected to UI Console. DE: KDE
+2026-02-14 11:57:43,560 [INFO] [console] LxNotes ready. Theme: dark
+2026-02-14 11:57:50,776 [INFO] [console] Opening file dialog...
+2026-02-14 11:57:56,867 [INFO] [console] Attempting to open: /home/Nefiu/Pulpit/hello world.txt
+2026-02-14 11:57:56,870 [INFO] [console] Loaded: hello world.txt
+2026-02-14 11:57:56,893 [DEBUG] [console] [LxCharset] detect:start: Starting detect_encoding | size=30851737
+2026-02-14 11:57:56,925 [DEBUG] [console] [LxCharset] detect:early-exit-check: Running early-exit precheck | size=30851737
+2026-02-14 11:57:56,957 [DEBUG] [console] [LxCharset] core:start: Core detection started | size=4096
+2026-02-14 11:57:56,984 [DEBUG] [console] [LxCharset] core:utf8: UTF-8 DFA validation passed | confidence=0.97
+2026-02-14 11:57:57,016 [DEBUG] [console] [LxCharset] detect:early-exit-miss: Early-exit threshold not reached; analyzing full payload | confidence=0.97, threshold=0.98
+2026-02-14 11:57:57,047 [DEBUG] [console] [LxCharset] core:start: Core detection started | size=30851737
+2026-02-14 11:57:58,041 [DEBUG] [console] [LxCharset] core:utf8: UTF-8 DFA validation passed | confidence=0.97
+2026-02-14 11:57:58,058 [INFO] [console] [LxCharset] detect:final: Detection finished | encoding=utf-8, confidence=0.97, used_fallback=False, detected_by_bom=False
+2026-02-14 11:57:58,059 [INFO] [console] [LxCharset] detect:result: Detection finished | encoding=utf-8, confidence=0.97, used_fallback=False, detected_by_bom=False
+2026-02-14 11:57:58,060 [INFO] [console] LxCharset detected encoding for hello world.txt: utf-8 (97.0%)
+2026-02-14 11:57:58,062 [INFO] [console] Decoded using lx_engine: utf-8 | fallback=False | attempts=['utf-8', 'utf-8-sig', 'utf-16', 'cp1250', 'latin-1', 'iso-8859-2']
+2026-02-14 11:57:58,063 [INFO] [console] Large file detected (30851737 chars). Invoking lx_engine C++...
+2026-02-14 11:57:58,189 [DEBUG] [console] EditorTab: Evergreen core initialized.
+2026-02-14 11:57:58,192 [INFO] [console] New tab created: 'hello world.txt'
+2026-02-14 11:57:58,952 [INFO] [console] TURBO MODE ACTIVE: RichText/Wrap disabled. Engine acceleration ready.
+2026-02-14 11:57:58,954 [INFO] [console] Turbo Mode enabled.
+2026-02-14 11:57:58,955 [DEBUG] [core.file.recent_files] Recent files list updated in /home/Nefiu/.lxnotes_recent.json
+2026-02-14 11:57:58,955 [INFO] [console] File loaded successfully: /home/Nefiu/Pulpit/hello world.txt

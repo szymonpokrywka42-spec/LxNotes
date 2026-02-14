@@ -1,0 +1,21 @@
+{
+  "venvPath": ".",
+  "include": [
+    "Module/LxCharset/tests/python",
+    "Module/LxCharset/core/python",
+    "Module/LxCharset/logics/python"
+  ],
+  "extraPaths": [
+    "Module/LxCharset/core/python",
+    "Module/LxCharset/logics/python"
+  ],
+  "executionEnvironments": [
+    {
+      "root": "Module/LxCharset/tests/python",
+      "extraPaths": [
+        "../../core/python",
+        "../../logics/python"
+      ]
+    }
+  ]
+}

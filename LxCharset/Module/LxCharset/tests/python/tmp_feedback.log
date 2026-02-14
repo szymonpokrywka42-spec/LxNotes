@@ -1,0 +1,2 @@
+2026-02-14T11:28:14.586 [DEBUG] detect:start: Starting detect_encoding | size=8
+2026-02-14T11:28:14.586 [INFO] detect:result: Detection finished | encoding=utf-8-sig, confidence=1.0, used_fallback=False, detected_by_bom=True

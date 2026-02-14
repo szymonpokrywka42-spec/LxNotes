@@ -1,0 +1,24 @@
+2026-02-14 11:56:24,507 [INFO] [runtime] Runtime logging initialized.
+2026-02-14 11:56:24,575 [INFO] [boot] 🌐 Platform: Linux | Session: wayland
+2026-02-14 11:56:24,579 [INFO] [boot] ⚙️ RTLD_GLOBAL enabled (C++ symbols optimization).
+2026-02-14 11:56:24,580 [INFO] [boot] 🖥️ Detected DE: KDE
+2026-02-14 11:56:24,582 [INFO] [boot] Checking Engine components...
+2026-02-14 11:56:24,628 [INFO] [boot] ℹ️ Engine build: up to date
+2026-02-14 11:56:24,629 [INFO] [boot] Launching UI...
+2026-02-14 11:56:24,665 [INFO] [console] Console Logic Initialized
+2026-02-14 11:56:24,668 [INFO] [console] C++ Engine bridge established.
+2026-02-14 11:56:24,670 [INFO] [console] 🌐 Platform: Linux | Session: wayland
+2026-02-14 11:56:24,671 [INFO] [console] ⚙️ RTLD_GLOBAL enabled (C++ symbols optimization).
+2026-02-14 11:56:24,672 [INFO] [console] 🖥️ Detected DE: KDE
+2026-02-14 11:56:24,673 [INFO] [console] Checking Engine components...
+2026-02-14 11:56:24,675 [INFO] [console] ℹ️ Engine build: up to date
+2026-02-14 11:56:24,676 [INFO] [console] Launching UI...
+2026-02-14 11:56:24,678 [INFO] [console] Initializing EditorManager with Evergreen UI...
+2026-02-14 11:56:24,684 [DEBUG] [console] EditorTab: Evergreen core initialized.
+2026-02-14 11:56:24,685 [INFO] [console] New tab created: 'Untitled'
+2026-02-14 11:56:24,687 [DEBUG] [core.theme.theme_manager] Styles directory detected: /home/Nefiu/Pulpit/LxNotes/assets/styles
+2026-02-14 11:56:24,687 [INFO] [core.file.recent_files] Loaded 10 recent files from history.
+2026-02-14 11:56:24,697 [INFO] [core.theme.theme_manager] Theme 'dark' applied successfully.
+2026-02-14 11:56:24,697 [INFO] [console] Manager connected to UI Console. DE: KDE
+2026-02-14 11:56:24,698 [INFO] [console] LxNotes ready. Theme: dark
+2026-02-14 11:56:41,572 [INFO] [console] Opening file dialog...
