@@ -3,6 +3,32 @@
 **LxNotes** is a lightweight Linux notepad with tabbed documents, dark/light themes, and customizable fonts – fast, simple, and user-friendly, perfect for managing multiple text files in one window.
 ---
 
+## 🚀 Release v1.5 [Stable]
+
+This release focuses on stability hardening, production-grade diagnostics, and full local charset detection integration.
+
+### 🧱 Reliability Fixes
+* **Save/Save As stability:** fixed async save flow and return status handling to avoid inconsistent behavior in save operations.
+* **Overwrite flow:** improved `Save As` overwrite handling with explicit confirmation path and safer dialog behavior.
+* **Console `logs` crash fix:** replaced platform-unsafe logs-folder opener path to prevent crashes on Linux.
+
+### 📈 Logging & Crash Diagnostics
+* **Runtime logger added:** centralized runtime logging layer with file + stderr handlers.
+* **Crash visibility:** enabled `faulthandler` crash dumps and unhandled exception hooks (`sys` and `threading`).
+* **Safer flush policy:** file logs now use explicit flush + fsync to reduce log loss during crashes.
+* **Fallback instrumentation:** modules that previously relied on plain `print` now also report into runtime logging.
+
+### ⚙️ Engine + I/O Follow-up
+* Continued engine-side decoding integration in file-open path, with clearer decode metadata in logs.
+
+### 🔤 LxCharset Integration
+* **`chardet` removed from app runtime:** file encoding detection no longer depends on external `chardet`.
+* **Local module integrated:** `LxCharset` is now bundled in project tree and used by `FileHandler` for preferred-encoding detection.
+* **Feedback wired to console/logs:** LxCharset events are forwarded into LxNotes console stream and log files during file-open operations.
+* **Fallback kept safe:** existing decode fallback order in open pipeline is preserved to avoid regressions on malformed files.
+* **Stable integration contract:** see `docs/LXCHARSET_API.md` for the API surface required by LxNotes.
+
+---
 ## 🚀 Release v1.4 [Stable]
 
 This release upgrades the native engine architecture and moves file decoding to a new C++ pipeline for better scalability with large and mixed-encoding text files.
@@ -18,7 +44,7 @@ This release upgrades the native engine architecture and moves file decoding to 
 * **Safer Fallback Strategy:** Strict-first decoding and controlled replace fallback for malformed input.
 
 ### 🎨 UI/UX Polish
-* Windows 11-inspired theme refresh for dark/light palettes.
+* Windows inspired theme refresh for dark/light palettes.
 * Tabbar geometry and edge cleanup for more consistent visual joins.
 * Settings combobox arrow rendering hardened with custom paint fallback.
 
@@ -118,7 +144,13 @@ Startup Optimization
 2. Install dependencies:
 
 ```bash
-pip install PyQt6 chardet
+pip install PyQt6
 And you just need to turn on main.py file
 with vscode or terminal or .desktop file 
 and application will turn on.
+
+## Developer checks
+
+```bash
+./scripts/run_checks.sh
+```

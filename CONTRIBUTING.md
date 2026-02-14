@@ -16,7 +16,16 @@ LxNotes follows a modular structure to keep the code clean and maintainable.
 ### ⚙️ Backend & Logic (The Brain)
 - **File Handling:** Managed by `file_handler.py` and `lx_engine.cpp` for simplicity and performance.
 - **Performance Engine (C++):** Our secret sauce. For large files, the `lx_engine` module (C++) takes over text processing to ensure "Turbo Mode" performance.
-- **Encoding:** We use `chardet` for intelligent file encoding detection.
+- **Encoding:** We use the local `LxCharset` module for intelligent file encoding detection with console feedback.
+  - API contract used by LxNotes is documented in `docs/LXCHARSET_API.md`.
+
+### Local checks
+
+Run before PR:
+
+```bash
+./scripts/run_checks.sh
+```
 
 ---
 

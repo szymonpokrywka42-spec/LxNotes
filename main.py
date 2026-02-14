@@ -47,7 +47,7 @@ def run_setup():
 
     setup(
         name="lx_engine",
-        version="1.4",
+        version="1.5",
         author="Nefiu",
         description="C++ Core for LxNotes",
         ext_modules=ext_modules,
@@ -69,6 +69,9 @@ def is_setup_invocation(argv):
 
 
 def run_app():
+    from core.logging import setup_runtime_logging, log_message
+    setup_runtime_logging(current_dir)
+
     # 2. Importy niezbędne tylko do Splasha (szybkie)
     from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel
     from PyQt6.QtGui import QPixmap
@@ -142,6 +145,7 @@ def run_app():
 
     def log_boot(msg):
         print(msg)
+        log_message("BOOT", msg, "boot")
         boot_logs.append(msg)
         splash.update_msg(msg)
 
