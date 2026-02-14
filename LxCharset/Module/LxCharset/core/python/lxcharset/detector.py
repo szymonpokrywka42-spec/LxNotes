@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import math
 from typing import Any, Callable
 
 
@@ -51,6 +52,7 @@ _ISO88592_BYTE_WEIGHTS = {
 }
 _EARLY_EXIT_BYTES = 4096
 _EARLY_EXIT_CONFIDENCE = 0.98
+_PROBE_SAMPLE_BYTES = 65536
 _AMBIGUITY_DELTA = 0.03
 _LANGUAGE_FALLBACK_ORDER = (
     "utf-8",
@@ -259,6 +261,120 @@ def calculate_transition_confidence(valid_transitions: int, invalid_transitions:
     return (v + 1.0) / (v + i + 2.0)
 
 
+def _estimate_byte_entropy(data: bytes) -> float:
+    if not data:
+        return 0.0
+    table = build_byte_frequency_table(data)
+    length = len(data)
+    entropy = 0.0
+    for count in table:
+        if count == 0:
+            continue
+        p = count / length
+        entropy -= p * math.log2(p)
+    return entropy
+
+
+def _is_probably_binary(data: bytes, sample_limit: int = 65536) -> tuple[bool, dict[str, float]]:
+    if not data:
+        return False, {"nul_ratio": 0.0, "control_ratio": 0.0, "ascii_printable_ratio": 0.0, "high_ratio": 0.0, "entropy": 0.0}
+
+    sample = data[:sample_limit]
+    length = len(sample)
+    nul = sample.count(0)
+    control = 0
+    ascii_printable = 0
+    high = 0
+
+    for b in sample:
+        if b >= 0x80:
+            high += 1
+        if b in (0x09, 0x0A, 0x0D) or (0x20 <= b <= 0x7E):
+            ascii_printable += 1
+        elif (0x00 <= b <= 0x08) or (0x0E <= b <= 0x1F) or b == 0x7F:
+            control += 1
+
+    nul_ratio = nul / length
+    control_ratio = control / length
+    ascii_printable_ratio = ascii_printable / length
+    high_ratio = high / length
+    entropy = _estimate_byte_entropy(sample)
+
+    if nul_ratio >= 0.01:
+        entropy = _estimate_byte_entropy(sample)
+        metrics = {
+            "nul_ratio": round(nul_ratio, 6),
+            "control_ratio": round(control_ratio, 6),
+            "ascii_printable_ratio": round(ascii_printable_ratio, 6),
+            "high_ratio": round(high_ratio, 6),
+            "entropy": round(entropy, 6),
+        }
+        return True, metrics
+
+    if control_ratio >= 0.30 and ascii_printable_ratio < 0.50:
+        entropy = _estimate_byte_entropy(sample)
+        metrics = {
+            "nul_ratio": round(nul_ratio, 6),
+            "control_ratio": round(control_ratio, 6),
+            "ascii_printable_ratio": round(ascii_printable_ratio, 6),
+            "high_ratio": round(high_ratio, 6),
+            "entropy": round(entropy, 6),
+        }
+        return True, metrics
+
+    # Fast non-binary exits to avoid entropy cost on normal text paths.
+    if ascii_printable_ratio >= 0.85 and control_ratio < 0.02 and nul_ratio == 0.0:
+        metrics = {
+            "nul_ratio": round(nul_ratio, 6),
+            "control_ratio": round(control_ratio, 6),
+            "ascii_printable_ratio": round(ascii_printable_ratio, 6),
+            "high_ratio": round(high_ratio, 6),
+            "entropy": 0.0,
+        }
+        return False, metrics
+
+    if high_ratio < 0.20 and ascii_printable_ratio >= 0.55 and control_ratio < 0.05:
+        metrics = {
+            "nul_ratio": round(nul_ratio, 6),
+            "control_ratio": round(control_ratio, 6),
+            "ascii_printable_ratio": round(ascii_printable_ratio, 6),
+            "high_ratio": round(high_ratio, 6),
+            "entropy": 0.0,
+        }
+        return False, metrics
+
+    likely_binary = (
+        (entropy >= 7.75 and ascii_printable_ratio < 0.25)
+        or (entropy >= 7.85 and ascii_printable_ratio < 0.45)
+        or (entropy >= 7.60 and high_ratio > 0.45 and ascii_printable_ratio < 0.42)
+        or (entropy >= 7.90 and high_ratio > 0.50)
+    )
+
+    metrics = {
+        "nul_ratio": round(nul_ratio, 6),
+        "control_ratio": round(control_ratio, 6),
+        "ascii_printable_ratio": round(ascii_printable_ratio, 6),
+        "high_ratio": round(high_ratio, 6),
+        "entropy": round(entropy, 6),
+    }
+    return likely_binary, metrics
+
+
+def _select_probe_sample(data: bytes, sample_size: int = _PROBE_SAMPLE_BYTES) -> bytes:
+    if len(data) <= sample_size:
+        return data
+
+    third = sample_size // 3
+    if third <= 0:
+        return data[:sample_size]
+    start = data[:third]
+    mid_start = max(0, (len(data) // 2) - (third // 2))
+    middle = data[mid_start : mid_start + third]
+    tail = data[-third:]
+    sample = start + middle + tail
+    return sample[:sample_size]
+
+
 def _choose_by_language_fallback_map(
     candidates: list[tuple[str, float]],
     ambiguity_delta: float = _AMBIGUITY_DELTA,
@@ -465,8 +581,7 @@ def _single_byte_score(decoded: str) -> float:
 
 def probe_single_byte_encoding(data: bytes) -> tuple[str, float] | None:
     candidates = ("windows-1250", "iso-8859-2")
-    best_encoding = "windows-1250"
-    best_score = -10.0
+    scores: list[tuple[str, float]] = []
 
     for enc in candidates:
         try:
@@ -477,21 +592,33 @@ def probe_single_byte_encoding(data: bytes) -> tuple[str, float] | None:
         score = _single_byte_score(decoded)
         score += max(-0.9, min(0.9, polish_specific_weighting(data, enc)))
         score += (distribution_match_score(data, enc) - 0.5) * 1.1
-        if score > best_score:
-            best_score = score
-            best_encoding = enc
+        scores.append((enc, score))
 
-    if best_score <= -9.0:
+    if not scores:
         _emit_feedback("DEBUG", "single-byte:none", "No valid single-byte candidate", size=len(data))
         return None
 
+    scores.sort(key=lambda item: item[1], reverse=True)
+    best_encoding, best_score = scores[0]
+    second_score = scores[1][1] if len(scores) > 1 else -10.0
+    margin = best_score - second_score
+
     confidence = max(0.0, min(0.93, 0.45 + best_score * 0.32))
+    # Ambiguous single-byte outcomes should not report overly strong confidence.
+    if len(scores) > 1 and margin < 0.12:
+        confidence = min(confidence, 0.72)
+    if len(scores) > 1 and margin < 0.06:
+        confidence = min(confidence, 0.62)
+    if len(scores) > 1 and margin < 0.03:
+        confidence = min(confidence, 0.55)
+
     _emit_feedback(
         "DEBUG",
         "single-byte:select",
         "Single-byte candidate selected",
         encoding=best_encoding,
         confidence=round(confidence, 6),
+        margin=round(margin, 6) if len(scores) > 1 else None,
     )
     return best_encoding, confidence
 
@@ -780,6 +907,15 @@ def _detect_encoding_core(data: bytes) -> DetectionResult:
 
     utf8_ok, utf8_valid, utf8_invalid = analyze_utf8_dfa(data)
     if utf8_ok:
+        is_binary, binary_metrics = _is_probably_binary(data, sample_limit=4096)
+        if is_binary:
+            _emit_feedback(
+                "WARNING",
+                "core:utf8-binary-guard",
+                "UTF-8-valid bytes rejected by binary guard",
+                **binary_metrics,
+            )
+            return DetectionResult(encoding="utf-8", confidence=0.0, used_fallback=True, detected_by_bom=False)
         conf = max(0.7, min(0.97, calculate_transition_confidence(utf8_valid, utf8_invalid)))
         _emit_feedback("DEBUG", "core:utf8", "UTF-8 DFA validation passed", confidence=round(conf, 6))
         return DetectionResult(encoding="utf-8", confidence=conf, used_fallback=False, detected_by_bom=False)
@@ -791,10 +927,25 @@ def _detect_encoding_core(data: bytes) -> DetectionResult:
         invalid_transitions=utf8_invalid,
     )
 
-    has_high_bytes = any(byte >= 0x80 for byte in data)
+    is_binary, binary_metrics = _is_probably_binary(data)
+    if is_binary:
+        _emit_feedback("WARNING", "core:binary-guard", "Binary guard triggered", **binary_metrics)
+        return DetectionResult(encoding="utf-8", confidence=0.0, used_fallback=True, detected_by_bom=False)
+
+    probe_data = _select_probe_sample(data)
+    if len(probe_data) != len(data):
+        _emit_feedback(
+            "DEBUG",
+            "core:probe-sampled",
+            "Using sampled payload for prober stage",
+            original_size=len(data),
+            sample_size=len(probe_data),
+        )
+
+    has_high_bytes = any(byte >= 0x80 for byte in probe_data)
     if has_high_bytes:
-        multi_guess = probe_multi_byte_encoding(data)
-        single_guess = probe_single_byte_encoding(data)
+        multi_guess = probe_multi_byte_encoding(probe_data)
+        single_guess = probe_single_byte_encoding(probe_data)
         candidates: list[tuple[str, float]] = []
         if multi_guess is not None:
             candidates.append(multi_guess)

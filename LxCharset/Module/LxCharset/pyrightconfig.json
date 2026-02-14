@@ -1,9 +1,20 @@
 {
   "include": [
     "core/python",
-    "logics/python"
+    "logics/python",
+    "tests/python"
   ],
   "extraPaths": [
-    "."
+    "core/python",
+    "logics/python"
+  ],
+  "executionEnvironments": [
+    {
+      "root": "tests/python",
+      "extraPaths": [
+        "../core/python",
+        "../logics/python"
+      ]
+    }
   ]
 }

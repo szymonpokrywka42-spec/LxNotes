@@ -2,12 +2,19 @@
 
 `LxCharset` is a headless encoding-detection module (no UI), designed to replace external `chardet` usage with a custom engine.
 
+## Warning
+
+This module is primarily designed for `Lx*` projects (especially `LxNotes`).
+Using `LxCharset` in unrelated external projects may require additional adapter work and custom integration.
+
 ## Layout
 - `core` - detector engine, feedback bus, public Python API
 - `logics` - high-level pipeline wrappers
 - `tests` - Python and C++ checks
 - `docs` - roadmap and technical notes
 - `scripts` - local test/build helpers
+
+Current execution plan: `docs/roadmap.md`
 
 ## Quick Start (Integration)
 
@@ -52,7 +59,13 @@ print(result.encoding, result.confidence)
 ./scripts/run_py_tests.sh
 ./scripts/run_cpp_tests.sh
 ./scripts/run_all_tests.sh
+python3 ./scripts/stress_test.py
 ```
+
+Python accuracy suite currently covers:
+- Unicode: `utf-8`, `utf-16-le`, `utf-16-be`
+- Single-byte: `windows-1250`, `iso-8859-2`, `latin-1` path
+- Multi-byte: `shift_jis`, `euc_jp`, `big5`
 
 ## Creator
 - Szymon Pokrywka
