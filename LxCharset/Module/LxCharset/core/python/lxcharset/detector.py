@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import math
+import time
 from typing import Any, Callable
 
 
@@ -53,6 +54,9 @@ _ISO88592_BYTE_WEIGHTS = {
 _EARLY_EXIT_BYTES = 4096
 _EARLY_EXIT_CONFIDENCE = 0.98
 _PROBE_SAMPLE_BYTES = 65536
+_MAX_ANALYSIS_BYTES = 2 * 1024 * 1024
+_MAX_UTF8_DFA_BYTES = 1024 * 1024
+_DETECTION_TIMEOUT_SECONDS = 0.35
 _AMBIGUITY_DELTA = 0.03
 _LANGUAGE_FALLBACK_ORDER = (
     "utf-8",
@@ -71,6 +75,19 @@ _LANGUAGE_FALLBACK_ORDER = (
 )
 _LANGUAGE_FALLBACK_RANK = {enc: i for i, enc in enumerate(_LANGUAGE_FALLBACK_ORDER)}
 _feedback_hook: Callable[..., None] | None = None
+_BINARY_MAGIC_SIGNATURES = (
+    (b"\x89PNG\r\n\x1a\n", "png"),
+    (b"\xFF\xD8\xFF", "jpeg"),
+    (b"%PDF-", "pdf"),
+    (b"\x7fELF", "elf"),
+    (b"PK\x03\x04", "zip"),
+    (b"Rar!\x1A\x07\x00", "rar"),
+    (b"\x1f\x8b\x08", "gzip"),
+    (b"BZh", "bzip2"),
+    (b"GIF87a", "gif87a"),
+    (b"GIF89a", "gif89a"),
+    (b"OggS", "ogg"),
+)
 _DISTRIBUTION_PATTERNS = {
     "windows-1250": {
         0xA5: (0.0030, 1.2),
@@ -275,11 +292,76 @@ def _estimate_byte_entropy(data: bytes) -> float:
     return entropy
 
 
-def _is_probably_binary(data: bytes, sample_limit: int = 65536) -> tuple[bool, dict[str, float]]:
+def _detect_binary_magic(sample: bytes) -> str | None:
+    for magic, name in _BINARY_MAGIC_SIGNATURES:
+        if sample.startswith(magic):
+            return name
+    return None
+
+
+def _looks_like_utf16_text_pattern(sample: bytes) -> tuple[bool, dict[str, float]]:
+    if len(sample) < 8:
+        return False, {"utf16le_pattern": 0.0, "utf16be_pattern": 0.0, "even_nul_ratio": 0.0, "odd_nul_ratio": 0.0}
+
+    even = sample[0::2]
+    odd = sample[1::2]
+    if not even or not odd:
+        return False, {"utf16le_pattern": 0.0, "utf16be_pattern": 0.0, "even_nul_ratio": 0.0, "odd_nul_ratio": 0.0}
+
+    def _printable_ratio(chunk: bytes) -> float:
+        if not chunk:
+            return 0.0
+        printable = 0
+        for b in chunk:
+            if b in (0x09, 0x0A, 0x0D) or 0x20 <= b <= 0x7E:
+                printable += 1
+        return printable / len(chunk)
+
+    even_nul_ratio = even.count(0) / len(even)
+    odd_nul_ratio = odd.count(0) / len(odd)
+    even_printable = _printable_ratio(even)
+    odd_printable = _printable_ratio(odd)
+
+    utf16le_pattern = odd_nul_ratio >= 0.45 and even_nul_ratio <= 0.10 and even_printable >= 0.55
+    utf16be_pattern = even_nul_ratio >= 0.45 and odd_nul_ratio <= 0.10 and odd_printable >= 0.55
+
+    metrics = {
+        "utf16le_pattern": 1.0 if utf16le_pattern else 0.0,
+        "utf16be_pattern": 1.0 if utf16be_pattern else 0.0,
+        "even_nul_ratio": round(even_nul_ratio, 6),
+        "odd_nul_ratio": round(odd_nul_ratio, 6),
+    }
+    return utf16le_pattern or utf16be_pattern, metrics
+
+
+def _is_probably_binary(data: bytes, sample_limit: int = 65536) -> tuple[bool, dict[str, Any]]:
     if not data:
         return False, {"nul_ratio": 0.0, "control_ratio": 0.0, "ascii_printable_ratio": 0.0, "high_ratio": 0.0, "entropy": 0.0}
 
     sample = data[:sample_limit]
+    magic_type = _detect_binary_magic(sample[:16])
+    if magic_type is not None:
+        return True, {
+            "magic_binary_hit": 1.0,
+            "magic_name": magic_type,
+            "nul_ratio": 0.0,
+            "control_ratio": 0.0,
+            "ascii_printable_ratio": 0.0,
+            "high_ratio": 0.0,
+            "entropy": 0.0,
+        }
+
+    looks_utf16, utf16_metrics = _looks_like_utf16_text_pattern(sample)
+    if looks_utf16:
+        return False, {
+            **utf16_metrics,
+            "nul_ratio": round(sample.count(0) / max(len(sample), 1), 6),
+            "control_ratio": 0.0,
+            "ascii_printable_ratio": 0.0,
+            "high_ratio": round(sum(1 for b in sample if b >= 0x80) / max(len(sample), 1), 6),
+            "entropy": 0.0,
+        }
+
     length = len(sample)
     nul = sample.count(0)
     control = 0
@@ -363,16 +445,49 @@ def _is_probably_binary(data: bytes, sample_limit: int = 65536) -> tuple[bool, d
 def _select_probe_sample(data: bytes, sample_size: int = _PROBE_SAMPLE_BYTES) -> bytes:
     if len(data) <= sample_size:
         return data
+    # Keep a contiguous prefix to avoid synthetic byte sequences created by
+    # concatenating non-adjacent segments.
+    return data[:sample_size]
 
-    third = sample_size // 3
-    if third <= 0:
-        return data[:sample_size]
-    start = data[:third]
-    mid_start = max(0, (len(data) // 2) - (third // 2))
-    middle = data[mid_start : mid_start + third]
-    tail = data[-third:]
-    sample = start + middle + tail
-    return sample[:sample_size]
+
+def _trim_incomplete_utf8_suffix(data: bytes) -> bytes:
+    """
+    Trim a trailing partial UTF-8 code point introduced by sampling cut-off.
+    Internal invalid bytes are intentionally left untouched.
+    """
+    n = len(data)
+    if n == 0:
+        return data
+
+    i = n - 1
+    continuation_count = 0
+    while i >= 0 and (data[i] & 0xC0) == 0x80 and continuation_count < 3:
+        continuation_count += 1
+        i -= 1
+
+    if i < 0:
+        return b""
+
+    lead = data[i]
+    if lead <= 0x7F:
+        return data
+    if 0xC2 <= lead <= 0xDF:
+        expected_cont = 1
+    elif 0xE0 <= lead <= 0xEF:
+        expected_cont = 2
+    elif 0xF0 <= lead <= 0xF4:
+        expected_cont = 3
+    else:
+        return data
+
+    if continuation_count < expected_cont:
+        return data[:i]
+    return data
+
+
+def _build_failsafe_result(reason: str, **context: Any) -> DetectionResult:
+    _emit_feedback("WARNING", "detect:failsafe", "Fail-safe fallback activated", reason=reason, **context)
+    return DetectionResult(encoding="utf-8", confidence=0.0, used_fallback=True, detected_by_bom=False)
 
 
 def _choose_by_language_fallback_map(
@@ -905,7 +1020,21 @@ def _detect_encoding_core(data: bytes) -> DetectionResult:
             detected_by_bom=False,
         )
 
-    utf8_ok, utf8_valid, utf8_invalid = analyze_utf8_dfa(data)
+    utf8_probe = data
+    if len(data) > _MAX_UTF8_DFA_BYTES:
+        utf8_probe = _select_probe_sample(data, sample_size=_MAX_UTF8_DFA_BYTES)
+        trimmed_probe = _trim_incomplete_utf8_suffix(utf8_probe)
+        if trimmed_probe:
+            utf8_probe = trimmed_probe
+        _emit_feedback(
+            "DEBUG",
+            "core:utf8-sampled",
+            "Using sampled payload for UTF-8 DFA stage",
+            original_size=len(data),
+            sample_size=len(utf8_probe),
+        )
+
+    utf8_ok, utf8_valid, utf8_invalid = analyze_utf8_dfa(utf8_probe)
     if utf8_ok:
         is_binary, binary_metrics = _is_probably_binary(data, sample_limit=4096)
         if is_binary:
@@ -981,34 +1110,77 @@ def detect_encoding(data: bytes) -> DetectionResult:
     Detect encoding with early-exit logic.
     Stops after first 4KB when confidence is already above threshold.
     """
-    if len(data) > _EARLY_EXIT_BYTES:
-        _emit_feedback("DEBUG", "detect:early-exit-check", "Running early-exit precheck", size=len(data))
-        prefix_result = _detect_encoding_core(data[:_EARLY_EXIT_BYTES])
-        if prefix_result.confidence > _EARLY_EXIT_CONFIDENCE:
+    started = time.monotonic()
+    try:
+        if isinstance(data, memoryview):
+            raw_data = data.tobytes()
+        elif isinstance(data, bytearray):
+            raw_data = bytes(data)
+        elif isinstance(data, bytes):
+            raw_data = data
+        else:
+            try:
+                raw_data = bytes(data)
+            except Exception:
+                return _build_failsafe_result("invalid-input-type", input_type=type(data).__name__)
+
+        analysis_data = raw_data
+        if len(raw_data) > _MAX_ANALYSIS_BYTES:
+            analysis_data = _select_probe_sample(raw_data, sample_size=_MAX_ANALYSIS_BYTES)
             _emit_feedback(
-                "INFO",
-                "detect:early-exit-hit",
-                "Early-exit triggered",
-                encoding=prefix_result.encoding,
+                "DEBUG",
+                "detect:analysis-window",
+                "Using bounded analysis window",
+                original_size=len(raw_data),
+                analysis_size=len(analysis_data),
+                max_bytes=_MAX_ANALYSIS_BYTES,
+            )
+
+        if len(analysis_data) > _EARLY_EXIT_BYTES:
+            _emit_feedback("DEBUG", "detect:early-exit-check", "Running early-exit precheck", size=len(analysis_data))
+            prefix_result = _detect_encoding_core(analysis_data[:_EARLY_EXIT_BYTES])
+            if (time.monotonic() - started) > _DETECTION_TIMEOUT_SECONDS:
+                return _build_failsafe_result(
+                    "timeout-after-early-exit",
+                    elapsed=round(time.monotonic() - started, 6),
+                    timeout=_DETECTION_TIMEOUT_SECONDS,
+                )
+            if prefix_result.confidence > _EARLY_EXIT_CONFIDENCE:
+                _emit_feedback(
+                    "INFO",
+                    "detect:early-exit-hit",
+                    "Early-exit triggered",
+                    encoding=prefix_result.encoding,
+                    confidence=round(prefix_result.confidence, 6),
+                    threshold=_EARLY_EXIT_CONFIDENCE,
+                )
+                return prefix_result
+            _emit_feedback(
+                "DEBUG",
+                "detect:early-exit-miss",
+                "Early-exit threshold not reached; analyzing full payload",
                 confidence=round(prefix_result.confidence, 6),
                 threshold=_EARLY_EXIT_CONFIDENCE,
             )
-            return prefix_result
+
+        result = _detect_encoding_core(analysis_data)
+        elapsed = time.monotonic() - started
+        if elapsed > _DETECTION_TIMEOUT_SECONDS:
+            return _build_failsafe_result(
+                "timeout",
+                elapsed=round(elapsed, 6),
+                timeout=_DETECTION_TIMEOUT_SECONDS,
+            )
         _emit_feedback(
-            "DEBUG",
-            "detect:early-exit-miss",
-            "Early-exit threshold not reached; analyzing full payload",
-            confidence=round(prefix_result.confidence, 6),
-            threshold=_EARLY_EXIT_CONFIDENCE,
+            "INFO",
+            "detect:final",
+            "Detection finished",
+            encoding=result.encoding,
+            confidence=round(result.confidence, 6),
+            used_fallback=result.used_fallback,
+            detected_by_bom=result.detected_by_bom,
+            elapsed=round(elapsed, 6),
         )
-    result = _detect_encoding_core(data)
-    _emit_feedback(
-        "INFO",
-        "detect:final",
-        "Detection finished",
-        encoding=result.encoding,
-        confidence=round(result.confidence, 6),
-        used_fallback=result.used_fallback,
-        detected_by_bom=result.detected_by_bom,
-    )
-    return result
+        return result
+    except Exception as exc:
+        return _build_failsafe_result("exception", exception_type=type(exc).__name__)

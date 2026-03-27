@@ -3,6 +3,51 @@
 **LxNotes** is a lightweight Linux notepad with tabbed documents, dark/light themes, and customizable fonts – fast, simple, and user-friendly, perfect for managing multiple text files in one window.
 ---
 
+## 🚀 Release v1.6 [Stable]
+
+This release focuses on architecture cleanup, startup decoupling, stronger regression coverage, runtime i18n completion, and safer file-operation behavior under cancellation/race conditions.
+
+### 🧱 Architecture & Refactor
+* **Startup bootstrap extracted:** application runtime startup flow was moved from `main.py` into `core/bootstrap/app_bootstrap.py` for a cleaner entrypoint.
+* **`FileHandler` modularized:** open/save finalization logic is now delegated to `OpenFlow` and `SaveFlow` in `core/file/operation_flows.py`.
+* **Worker lifecycle centralized:** active/canceled worker state moved into `WorkerRegistry` for clearer ownership and safer cleanup.
+* **Worker responsibilities split:** file worker logic was separated into `OpenFileWorker` and `SaveFileWorker`, while preserving compatibility via the `FileWorker(...)` factory.
+
+### 🛡 Reliability & Cancel Safety
+* **Late-signal cancel guards:** after user cancel, delayed `finished/error` signals are ignored safely to prevent stale UI updates.
+* **Consistent cancel path:** interruption and cleanup handling is now explicit and uniform across open/save flows.
+* **Duplicate-op protection:** duplicate open/save operations on the same path are blocked with clear logs.
+
+### 🌐 Internationalization (Runtime)
+* **Runtime i18n expanded:** console command outputs and file-operation UI/runtime messages now use translation keys with safe fallbacks.
+* **Language consistency checks:** all locale files are validated against `en-us` key coverage.
+* **Product-term consistency:** `GoToLine`, `Large Viewer`, and `Turbo` tokens are enforced in critical runtime strings across locales.
+* **Localization pass completed for key locales:** improved quality and natural phrasing for updated runtime keys across multiple languages.
+
+### 🧪 Testing & Quality
+* **Large Viewer regression suite added:** activation state, chunk switching, full-editable conversion, and read-only keypress/hint behavior.
+* **Save As overwrite flow tests added:** dialog cancel, overwrite reject (`No`), and overwrite accept (`Yes`) scenarios.
+* **Startup smoke test added:** offscreen `MainWindow` construction sanity test.
+* **Expanded automated baseline:** regression suite now covers startup, console help, file flows, cancel races, LxCharset bridge, dialogs, language consistency, and Large Viewer behavior.
+
+### 🛠 UX / Behavior Updates
+* **Command Palette removed fully:** command palette implementation and related UI hooks were removed as requested.
+* **Status and encoding feedback improved:** open flow continues to expose detected encoding and operation state in logs/status area.
+
+### ⚡ Performance & Stability (latest)
+* **Throttled fsync logging:** runtime log flushing now batches fsync pressure to reduce I/O spikes while keeping crash diagnostics reliable.
+* **Find/Replace path improved:** search/replace flow is more stable on repeated actions and large-buffer scans.
+* **Statusbar debounce + cache:** status insights refresh is debounced and cached to avoid unnecessary UI recomputation.
+* **Safer recent-files persistence:** recent list writes are guarded to reduce corruption risk on interrupted or rapid session shutdown.
+
+### 🧭 Roadmap Additions (Current Dev Cycle)
+* **Save All workflow:** menu + shortcut flow for saving all modified tabs, with safe handling for untitled tabs.
+* **Console power commands:** `save-all`, `recent`, and `open-recent <n>` for faster keyboard-driven workflows.
+* **C++ search fast-path:** Find Next and Replace All can use native-engine paths with Qt fallback.
+* **Quick Open ranking:** lightweight fuzzy-like ranking and result limiting for large history sets.
+
+---
+
 ## 🚀 Release v1.5 [Stable]
 
 This release focuses on stability hardening, production-grade diagnostics, and full local charset detection integration.
@@ -145,9 +190,15 @@ Startup Optimization
 
 ```bash
 pip install PyQt6
-And you just need to turn on main.py file
-with vscode or terminal or .desktop file 
-and application will turn on.
+```
+
+3. Start the app:
+
+```bash
+python3 main.py
+```
+
+You can also run it from VS Code or a `.desktop` launcher.
 
 ## Developer checks
 

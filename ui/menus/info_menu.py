@@ -77,7 +77,7 @@ class InfoMenu(QMenu):
             f"  <span style='color: {secondary_text};'>{description}</span>"
             f"  <br><br>"
             f"  <div style='font-size: 13px;'>"
-            f"    {v_label}: <b style='color: {accent_color};'>1.5 Stable</b><br>"
+            f"    {v_label}: <b style='color: {accent_color};'>1.6 Stable</b><br>"
             f"    {c_label}: <b>Szymon Pokrywka</b>"
             f"  </div>"
             f"  <br>"

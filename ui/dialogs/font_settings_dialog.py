@@ -1,10 +1,11 @@
 from PyQt6.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout,
-    QLabel, QFontComboBox, QSpinBox,
+    QLabel, QComboBox, QSpinBox, QApplication,
     QPushButton, QColorDialog, QWidget
 )
-from PyQt6.QtGui import QColor, QFont, QTextCharFormat
+from PyQt6.QtGui import QColor, QFont, QTextCharFormat, QFontDatabase
 from PyQt6.QtCore import Qt
+from PyQt6 import sip
 
 class FontSettingsDialog(QDialog):
     def __init__(self, editor, parent=None):
@@ -13,10 +14,11 @@ class FontSettingsDialog(QDialog):
         self.main_window = parent 
         
         # --- BEZPIECZNE DANE INICJALNE ---
-        # Nie pytamy o format, dopóki nie musimy, używamy właściwości edytora
-        self.init_family = editor.font().family()
-        self.init_size = int(editor.fontPointSize()) if editor.fontPointSize() > 0 else editor.font().pointSize()
-        self.selected_color = editor.textColor() if hasattr(editor, 'textColor') else QColor("#ffffff")
+        # Nie dotykamy obiektu edytora tutaj (może być niebezpieczny w niektórych buildach Qt).
+        app_font = QApplication.font() if QApplication.instance() else QFont()
+        self.init_family = app_font.family() or "Sans Serif"
+        self.init_size = app_font.pointSize() if app_font.pointSize() > 0 else 12
+        self.selected_color = QColor("#ffffff")
 
         self.setup_ui()
         self.retranslate_ui()
@@ -33,9 +35,21 @@ class FontSettingsDialog(QDialog):
         self.label_family = QLabel()
         layout.addWidget(self.label_family)
         
-        self.font_box = QFontComboBox()
+        self.font_box = QComboBox()
+        self.font_box.setEditable(False)
+        families = []
+        try:
+            families = QFontDatabase.families()
+        except Exception:
+            families = []
+        if not families:
+            families = ["Monospace", "Sans Serif", "Serif"]
+        self.font_box.addItems(families)
         # Ustawiamy czcionkę na tę, która jest aktualnie w edytorze
-        self.font_box.setCurrentFont(QFont(self.init_family))
+        if self.init_family:
+            idx = self.font_box.findText(self.init_family)
+            if idx >= 0:
+                self.font_box.setCurrentIndex(idx)
         layout.addWidget(self.font_box)
 
         # --- ROZMIAR ---
@@ -80,7 +94,7 @@ class FontSettingsDialog(QDialog):
             try:
                 t = self.main_window.lang_handler.tr(key)
                 return t if t != key else default
-            except:
+            except Exception:
                 return default
 
         self.setWindowTitle(get_tr("font_title", "Font Settings"))
@@ -97,7 +111,12 @@ class FontSettingsDialog(QDialog):
             self._update_color_preview()
 
     def apply(self):
-        if not self.editor:
+        if not self.editor or sip.isdeleted(self.editor):
+            if hasattr(self.main_window, 'console_logic'):
+                self.main_window.console_logic.log(
+                    "Font update skipped: editor widget is unavailable.",
+                    "WARN",
+                )
             self.reject()
             return
 
@@ -105,12 +124,15 @@ class FontSettingsDialog(QDialog):
         fmt = self.editor.currentCharFormat()
         
         # Zmieniamy tylko to, co jest w tym oknie
-        fmt.setFontFamily(self.font_box.currentFont().family())
+        fmt.setFontFamily(self.font_box.currentText())
         fmt.setFontPointSize(float(self.size_box.value()))
         fmt.setForeground(self.selected_color)
 
-        # Aplikujemy bezpiecznie
-        self.editor.setCurrentCharFormat(fmt)
+        # Aplikujemy bezpiecznie na zaznaczenie albo pod bieżący kursor.
+        if hasattr(self.editor, "merge_format_on_selection"):
+            self.editor.merge_format_on_selection(fmt)
+        else:
+            self.editor.setCurrentCharFormat(fmt)
         
         if hasattr(self.main_window, 'console_logic'):
             self.main_window.console_logic.log(f"Font updated: {fmt.fontFamily()} {fmt.fontPointSize()}pt", "INFO")

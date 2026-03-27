@@ -1,3 +1,5 @@
+from typing import List, Optional
+
 from PyQt6.QtWidgets import QTabWidget, QMessageBox
 from PyQt6.QtCore import Qt
 from core.editor.editor_tab import EditorTab
@@ -8,6 +10,8 @@ class EditorManager:
         self.console = parent.console_logic 
         
         self.tab_widget = QTabWidget()
+        self._closed_tabs_history: List[dict] = []
+        self._closed_tabs_limit = 20
         # V1.2: Ustawienia dla nowoczesnego wyglądu kart
         self.tab_widget.setTabsClosable(False) # Włączone iksy na kartach
         self.tab_widget.setMovable(True)
@@ -15,9 +19,10 @@ class EditorManager:
         self.tab_widget.setUsesScrollButtons(False)
 
         tab_bar = self.tab_widget.tabBar()
-        tab_bar.setDrawBase(False)
-        tab_bar.setExpanding(False)
-        tab_bar.setElideMode(Qt.TextElideMode.ElideRight)
+        if tab_bar is not None:
+            tab_bar.setDrawBase(False)
+            tab_bar.setExpanding(False)
+            tab_bar.setElideMode(Qt.TextElideMode.ElideRight)
         
         self.tab_widget.tabCloseRequested.connect(self.close_tab)
 
@@ -38,7 +43,7 @@ class EditorManager:
         self.console.log(f"New tab created: '{title}'", "EDITOR")
         return editor
 
-    def handle_text_changed(self, editor):
+    def handle_text_changed(self, editor: EditorTab):
         """Aktualizuje tytuł karty (dodaje/usuwa gwiazdkę)."""
         index = self.tab_widget.indexOf(editor)
         if index == -1: return
@@ -51,7 +56,7 @@ class EditorManager:
         elif not is_modified and title.endswith("*"):
             self.tab_widget.setTabText(index, title[:-1])
 
-    def close_tab(self, index):
+    def close_tab(self, index: int):
         """Zamyka pojedynczą kartę."""
         if index == -1: return
 
@@ -62,19 +67,61 @@ class EditorManager:
             if not self.prompt_save_changes(editor):
                 return 
 
+        if isinstance(editor, EditorTab):
+            self._remember_closed_tab(editor, self.tab_widget.tabText(index))
+            if getattr(editor, "large_file_mode", False) and hasattr(editor, "disable_large_file_mode"):
+                editor.disable_large_file_mode()
+
         self.tab_widget.removeTab(index)
         if self.tab_widget.count() == 0:
             self.new_tab()
 
-    def check_all_unsaved(self):
+    def _remember_closed_tab(self, editor: EditorTab, title: str):
+        snapshot = {
+            "title": title.replace("*", "").strip() or "Untitled",
+            "content": editor.get_full_text() if hasattr(editor, "get_full_text") else editor.toPlainText(),
+            "file_path": getattr(editor, "file_path", None),
+            "is_turbo_mode": bool(getattr(editor, "is_turbo_mode", False)),
+            "file_encoding": getattr(editor, "file_encoding", "utf-8"),
+            "file_encoding_confidence": float(getattr(editor, "file_encoding_confidence", 0.0) or 0.0),
+            "safe_edit_mode": bool(getattr(editor, "safe_edit_mode", False)),
+        }
+        self._closed_tabs_history.append(snapshot)
+        if len(self._closed_tabs_history) > self._closed_tabs_limit:
+            self._closed_tabs_history = self._closed_tabs_history[-self._closed_tabs_limit :]
+
+    def reopen_last_closed_tab(self) -> bool:
+        if not self._closed_tabs_history:
+            return False
+
+        snapshot = self._closed_tabs_history.pop()
+        editor = self.new_tab(title=snapshot.get("title", "Untitled"))
+        restored_content = snapshot.get("content", "")
+        if isinstance(restored_content, str) and len(restored_content) > 8_000_000 and hasattr(editor, "enable_large_file_mode"):
+            editor.enable_large_file_mode(restored_content)
+        else:
+            editor.setPlainText(restored_content)
+        editor.file_path = snapshot.get("file_path")
+        editor.file_encoding = snapshot.get("file_encoding", "utf-8")
+        editor.file_encoding_confidence = float(snapshot.get("file_encoding_confidence", 0.0) or 0.0)
+        if snapshot.get("is_turbo_mode") and hasattr(editor, "set_turbo_mode"):
+            editor.set_turbo_mode(True)
+        if snapshot.get("safe_edit_mode") and hasattr(editor, "enable_safe_edit_mode"):
+            editor.enable_safe_edit_mode(snapshot_text=restored_content)
+        editor.document().setModified(False)
+        self.handle_text_changed(editor)
+        return True
+
+    def check_all_unsaved(self) -> bool:
         """
         Sprawdza wszystkie karty przed zamknięciem aplikacji.
         Wyświetla jeden zbiorczy dialog, jeśli są niezapisane zmiany.
         """
-        unsaved_editors = [
-            self.tab_widget.widget(i) for i in range(self.tab_widget.count())
-            if isinstance(self.tab_widget.widget(i), EditorTab) and self.tab_widget.widget(i).document().isModified()
-        ]
+        unsaved_editors: List[EditorTab] = []
+        for i in range(self.tab_widget.count()):
+            widget = self.tab_widget.widget(i)
+            if isinstance(widget, EditorTab) and widget.document().isModified():
+                unsaved_editors.append(widget)
 
         if not unsaved_editors:
             return True
@@ -104,7 +151,7 @@ class EditorManager:
         else:
             return False # Anulujemy zamykanie aplikacji
 
-    def prompt_save_changes(self, editor):
+    def prompt_save_changes(self, editor: EditorTab) -> bool:
         """Dialog pytający o zapis zmian dla POJEDYNCZEJ karty."""
         tr = self.parent.lang_handler.tr
         index = self.tab_widget.indexOf(editor)
@@ -130,7 +177,7 @@ class EditorManager:
             return True
         return False
 
-    def save_all_sequence(self, editors):
+    def save_all_sequence(self, editors: List[EditorTab]) -> bool:
         """Pomocnicza metoda do zapisu listy edytorów."""
         for editor in editors:
             index = self.tab_widget.indexOf(editor)
@@ -139,9 +186,14 @@ class EditorManager:
                 return False # Jeśli użytkownik anuluje zapis któregokolwiek pliku, przerywamy
         return True
 
-    def get_all_editors(self):
-        return [self.tab_widget.widget(i) for i in range(self.tab_widget.count())]
+    def get_all_editors(self) -> List[EditorTab]:
+        editors: List[EditorTab] = []
+        for i in range(self.tab_widget.count()):
+            widget = self.tab_widget.widget(i)
+            if isinstance(widget, EditorTab):
+                editors.append(widget)
+        return editors
 
-    def get_current_editor(self):
+    def get_current_editor(self) -> Optional[EditorTab]:
         widget = self.tab_widget.currentWidget()
         return widget if isinstance(widget, EditorTab) else None

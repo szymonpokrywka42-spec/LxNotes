@@ -5,12 +5,17 @@ import logging
 import os
 import sys
 import threading
+import time
 import traceback
 
 _RUNTIME_READY = False
 _RUNTIME_LOG_FILE = None
 _CRASH_LOG_FILE = None
 _LOCK = threading.Lock()
+_PENDING_FSYNC = 0
+_LAST_DURABLE_FLUSH = 0.0
+_FLUSH_INTERVAL_SECONDS = 0.25
+_FLUSH_EVERY_WRITES = 25
 
 
 def _level_name_to_logging(level):
@@ -34,7 +39,7 @@ def _level_name_to_logging(level):
 
 
 def setup_runtime_logging(base_dir):
-    global _RUNTIME_READY, _RUNTIME_LOG_FILE, _CRASH_LOG_FILE
+    global _RUNTIME_READY, _RUNTIME_LOG_FILE, _CRASH_LOG_FILE, _LAST_DURABLE_FLUSH, _PENDING_FSYNC
     if _RUNTIME_READY:
         return
 
@@ -60,20 +65,25 @@ def setup_runtime_logging(base_dir):
     def _unhandled_exception(exc_type, exc, tb):
         log = logging.getLogger("runtime")
         log.critical("Unhandled exception", exc_info=(exc_type, exc, tb))
-        flush_runtime_logs()
+        _mark_runtime_activity()
+        flush_runtime_logs(force=True)
         sys.__excepthook__(exc_type, exc, tb)
 
     def _thread_exception(args):
         log = logging.getLogger(f"thread.{args.thread.name}")
         log.critical("Unhandled thread exception", exc_info=(args.exc_type, args.exc_value, args.exc_traceback))
-        flush_runtime_logs()
+        _mark_runtime_activity()
+        flush_runtime_logs(force=True)
 
     sys.excepthook = _unhandled_exception
     threading.excepthook = _thread_exception
 
     atexit.register(flush_runtime_logs)
+    _LAST_DURABLE_FLUSH = time.monotonic()
+    _PENDING_FSYNC = 0
     _RUNTIME_READY = True
     logging.getLogger("runtime").info("Runtime logging initialized.")
+    _mark_runtime_activity()
 
 
 def get_logger(name):
@@ -83,10 +93,31 @@ def get_logger(name):
 def log_message(level, message, source="app"):
     log = logging.getLogger(source)
     log.log(_level_name_to_logging(level), message)
+    _mark_runtime_activity()
+    flush_runtime_logs()
 
 
-def flush_runtime_logs():
+def _mark_runtime_activity():
+    global _PENDING_FSYNC
+    if not _RUNTIME_READY:
+        return
     with _LOCK:
+        _PENDING_FSYNC += 1
+
+
+def flush_runtime_logs(force=False):
+    global _PENDING_FSYNC, _LAST_DURABLE_FLUSH
+    with _LOCK:
+        if not _RUNTIME_READY:
+            return
+
+        now = time.monotonic()
+        if not force:
+            if _PENDING_FSYNC <= 0:
+                return
+            if _PENDING_FSYNC < _FLUSH_EVERY_WRITES and (now - _LAST_DURABLE_FLUSH) < _FLUSH_INTERVAL_SECONDS:
+                return
+
         root = logging.getLogger()
         for handler in root.handlers:
             try:
@@ -103,3 +134,5 @@ def flush_runtime_logs():
             except Exception:
                 pass
 
+        _PENDING_FSYNC = 0
+        _LAST_DURABLE_FLUSH = now

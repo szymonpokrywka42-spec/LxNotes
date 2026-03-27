@@ -1,0 +1,38 @@
+name: LxBinMan CI
+
+on:
+  push:
+    paths:
+      - "LxBinMan/**"
+      - "tests/test_lxbinman_smoke.py"
+      - ".github/workflows/lxbinman-ci.yml"
+  pull_request:
+    paths:
+      - "LxBinMan/**"
+      - "tests/test_lxbinman_smoke.py"
+      - ".github/workflows/lxbinman-ci.yml"
+
+jobs:
+  smoke:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.11", "3.12"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pybind11
+
+      - name: LxBinMan smoke tests
+        run: |
+          python -m unittest -q tests.test_lxbinman_smoke

@@ -1,0 +1,21 @@
+{
+  "include": [
+    "."
+  ],
+  "exclude": [
+    "**/__pycache__",
+    "build",
+    "dist",
+    "LxNotes_backup"
+  ],
+  "executionEnvironments": [
+    {
+      "root": ".",
+      "extraPaths": [
+        "./LxBinMan",
+        "./LxCharset/Module/LxCharset/core/python",
+        "./LxCharset/Module/LxCharset/logics/python"
+      ]
+    }
+  ]
+}

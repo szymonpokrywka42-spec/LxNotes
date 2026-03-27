@@ -1,5 +1,6 @@
 from PyQt6.QtWidgets import QMenu, QDialog
 from PyQt6.QtGui import QAction, QKeySequence, QIcon, QFont
+from PyQt6 import sip
 from PyQt6.QtCore import Qt
 from ui.dialogs.font_settings_dialog import FontSettingsDialog
 # Importujemy dialog, aby móc go wywołać
@@ -28,6 +29,10 @@ class EditMenu(QMenu):
         self.close_tab_action = QAction(self)
         self.close_tab_action.setShortcut(QKeySequence("Ctrl+W"))
         self.close_tab_action.triggered.connect(self.close_current_tab)
+
+        self.reopen_tab_action = QAction(self)
+        self.reopen_tab_action.setShortcut(QKeySequence("Ctrl+Shift+T"))
+        self.reopen_tab_action.triggered.connect(self.reopen_last_closed_tab)
 
         # --- Edycja standardowa ---
         self.undo_action = QAction(self)
@@ -77,6 +82,22 @@ class EditMenu(QMenu):
         self.goto_line_action.setShortcut(QKeySequence("Ctrl+G"))
         self.goto_line_action.triggered.connect(self.open_goto_line)
 
+        self.load_full_editable_action = QAction(self)
+        self.load_full_editable_action.setShortcut(QKeySequence("Ctrl+Shift+E"))
+        self.load_full_editable_action.triggered.connect(self.load_full_editable)
+
+        self.next_chunk_action = QAction(self)
+        self.next_chunk_action.setShortcut(QKeySequence("Ctrl+Alt+Down"))
+        self.next_chunk_action.triggered.connect(self.next_large_chunk)
+
+        self.prev_chunk_action = QAction(self)
+        self.prev_chunk_action.setShortcut(QKeySequence("Ctrl+Alt+Up"))
+        self.prev_chunk_action.triggered.connect(self.prev_large_chunk)
+
+        self.quick_revert_safe_action = QAction(self)
+        self.quick_revert_safe_action.setShortcut(QKeySequence("Ctrl+Shift+R"))
+        self.quick_revert_safe_action.triggered.connect(self.quick_revert_safe_edit)
+
         self.font_settings_action = QAction(self.font_icon, "", self)
         self.font_settings_action.triggered.connect(self.open_font_settings)
 
@@ -87,6 +108,7 @@ class EditMenu(QMenu):
     def _build_menu(self):
         self.addAction(self.new_tab_action)
         self.addAction(self.close_tab_action)
+        self.addAction(self.reopen_tab_action)
         self.addSeparator()
         self.addAction(self.undo_action)
         self.addAction(self.redo_action)
@@ -101,6 +123,10 @@ class EditMenu(QMenu):
         self.addSeparator()
         self.addAction(self.find_action)
         self.addAction(self.goto_line_action) # Dodano do menu
+        self.addAction(self.load_full_editable_action)
+        self.addAction(self.next_chunk_action)
+        self.addAction(self.prev_chunk_action)
+        self.addAction(self.quick_revert_safe_action)
         self.addAction(self.font_settings_action)
         self.addSeparator()
         self.addAction(self.select_all_action)
@@ -112,6 +138,7 @@ class EditMenu(QMenu):
         translations = {
             self.new_tab_action: "action_new_tab",
             self.close_tab_action: "action_close_tab",
+            self.reopen_tab_action: "action_reopen_closed_tab",
             self.undo_action: "action_undo",
             self.redo_action: "action_redo",
             self.bold_action: "font_bold",
@@ -122,12 +149,27 @@ class EditMenu(QMenu):
             self.paste_action: "action_paste",
             self.find_action: "action_find_replace",
             self.goto_line_action: "action_goto_line", # Klucz tłumaczenia dla skoku
+            self.load_full_editable_action: "action_load_full_editable",
+            self.next_chunk_action: "action_next_chunk",
+            self.prev_chunk_action: "action_previous_chunk",
+            self.quick_revert_safe_action: "action_quick_revert_safe_edit",
             self.font_settings_action: "action_font_settings",
             self.select_all_action: "action_select_all"
         }
 
         for action, key in translations.items():
-            action.setText(tr(key))
+            translated = tr(key)
+            if translated == key and key == "action_reopen_closed_tab":
+                translated = "Reopen Closed Tab"
+            if translated == key and key == "action_load_full_editable":
+                translated = "Load Full Editable"
+            if translated == key and key == "action_next_chunk":
+                translated = "Next Chunk"
+            if translated == key and key == "action_previous_chunk":
+                translated = "Previous Chunk"
+            if translated == key and key == "action_quick_revert_safe_edit":
+                translated = "Quick Revert (Safe Edit)"
+            action.setText(translated)
 
     def open_goto_line(self):
         """Wywołuje dialog i przekazuje wynik do mostu w FileHandlerze."""
@@ -139,22 +181,42 @@ class EditMenu(QMenu):
 
     def toggle_style(self, style_type):
         editor = self.current_editor()
-        if not editor: return
+        if not editor:
+            return
 
         if style_type == "bold":
-            weight = QFont.Weight.Bold if self.bold_action.isChecked() else QFont.Weight.Normal
-            editor.setFontWeight(weight.value)
+            if hasattr(editor, "set_bold"):
+                editor.set_bold(self.bold_action.isChecked())
+            else:
+                weight = QFont.Weight.Bold if self.bold_action.isChecked() else QFont.Weight.Normal
+                editor.setFontWeight(weight.value)
         elif style_type == "italic":
-            editor.setFontItalic(self.italic_action.isChecked())
+            if hasattr(editor, "set_italic"):
+                editor.set_italic(self.italic_action.isChecked())
+            else:
+                editor.setFontItalic(self.italic_action.isChecked())
         elif style_type == "underline":
-            editor.setFontUnderline(self.underline_action.isChecked())
+            if hasattr(editor, "set_underline"):
+                editor.set_underline(self.underline_action.isChecked())
+            else:
+                editor.setFontUnderline(self.underline_action.isChecked())
+
+        self.update_menu_states()
 
     def update_menu_states(self):
         editor = self.current_editor()
-        if editor:
-            self.bold_action.setChecked(editor.fontWeight() >= 600)
-            self.italic_action.setChecked(editor.fontItalic())
-            self.underline_action.setChecked(editor.fontUnderline())
+        if not editor:
+            return
+        fmt = editor.currentCharFormat()
+        self.bold_action.setChecked(fmt.fontWeight() >= QFont.Weight.Bold.value)
+        self.italic_action.setChecked(fmt.fontItalic())
+        self.underline_action.setChecked(fmt.fontUnderline())
+        # Keep this action always enabled so shortcut/menu are predictable.
+        # Runtime handler will show an informative message if safe revert is unavailable.
+        self.quick_revert_safe_action.setEnabled(True)
+        is_large = bool(getattr(editor, "large_file_mode", False))
+        self.next_chunk_action.setEnabled(is_large)
+        self.prev_chunk_action.setEnabled(is_large)
 
     def current_editor(self):
         return self.main_window.editor_manager.get_current_editor()
@@ -163,10 +225,48 @@ class EditMenu(QMenu):
         idx = self.main_window.editor_manager.tab_widget.currentIndex()
         if idx != -1: self.main_window.editor_manager.close_tab(idx)
 
+    def reopen_last_closed_tab(self):
+        if not self.main_window.editor_manager.reopen_last_closed_tab():
+            self.main_window.console_logic.log("No recently closed tab to reopen.", "INFO")
+
     def open_font_settings(self):
         if editor := self.current_editor():
-            dialog = FontSettingsDialog(editor, self.main_window)
-            dialog.exec()
+            if sip.isdeleted(editor):
+                self.main_window.console_logic.log(
+                    "Font settings unavailable: editor widget was already deleted.",
+                    "WARN",
+                )
+                return
+            try:
+                dialog = FontSettingsDialog(editor, self.main_window)
+                dialog.exec()
+            except Exception as e:
+                self.main_window.console_logic.log(
+                    f"Font settings dialog failed to open: {type(e).__name__}: {e}",
+                    "ERROR",
+                )
+
+    def load_full_editable(self):
+        self.main_window.file_handler.load_current_full_editable()
+
+    def next_large_chunk(self):
+        editor = self.current_editor()
+        if not editor or not hasattr(editor, "next_large_chunk"):
+            return
+        if not editor.next_large_chunk():
+            self.main_window.console_logic.log("Already at last chunk.", "INFO")
+        self.main_window._update_statusbar_now()
+
+    def prev_large_chunk(self):
+        editor = self.current_editor()
+        if not editor or not hasattr(editor, "previous_large_chunk"):
+            return
+        if not editor.previous_large_chunk():
+            self.main_window.console_logic.log("Already at first chunk.", "INFO")
+        self.main_window._update_statusbar_now()
+
+    def quick_revert_safe_edit(self):
+        self.main_window.file_handler.quick_revert_safe_edit()
 
     def undo(self): 
         if e := self.current_editor(): e.undo()

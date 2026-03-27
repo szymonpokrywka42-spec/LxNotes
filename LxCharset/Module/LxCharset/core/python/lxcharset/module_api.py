@@ -15,9 +15,33 @@ class LxCharsetModule:
         self._feedback = feedback_bus
         detector.set_feedback_hook(self._feedback.emit)
 
-    def detect_encoding(self, data: bytes) -> DetectionResult:
-        self._feedback.debug("detect:start", "Starting detect_encoding", size=len(data))
-        result = detector.detect_encoding(data)
+    @staticmethod
+    def _normalize_binary_input(data: object) -> bytes | None:
+        if isinstance(data, bytes):
+            return data
+        if isinstance(data, memoryview):
+            return data.tobytes()
+        if isinstance(data, bytearray):
+            return bytes(data)
+        try:
+            return bytes(data)
+        except Exception:
+            return None
+
+    def detect_encoding(self, data: object) -> DetectionResult:
+        normalized = self._normalize_binary_input(data)
+        payload: object = data
+        if normalized is not None:
+            payload = normalized
+            self._feedback.debug("detect:start", "Starting detect_encoding", size=len(normalized))
+        else:
+            self._feedback.warning(
+                "detect:input-normalization-failed",
+                "Input normalization failed, delegating to failsafe detector path",
+                input_type=type(data).__name__,
+            )
+
+        result = detector.detect_encoding(payload)
         self._feedback.info(
             "detect:result",
             "Detection finished",

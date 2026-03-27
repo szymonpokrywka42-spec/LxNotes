@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import (QDialog, QVBoxLayout, QLabel, QPushButton, 
-                             QComboBox, QHBoxLayout, QFrame, QStyledItemDelegate, QStyleOptionComboBox, QStyle)
+                             QComboBox, QHBoxLayout, QFrame, QStyledItemDelegate, QStyleOptionComboBox, QStyle, QCheckBox)
 from PyQt6.QtCore import Qt, QPointF
 from PyQt6.QtGui import QPalette, QPainter, QPen, QColor, QPolygonF
 
@@ -78,6 +78,17 @@ class SettingsDialog(QDialog):
             
         theme_layout.addWidget(self.theme_selector)
         layout.addLayout(theme_layout)
+
+        self.advanced_statusbar_checkbox = QCheckBox()
+        self.advanced_statusbar_checkbox.setChecked(
+            self.main_window.get_configured_status_bar_mode() == "advanced"
+        )
+        layout.addWidget(self.advanced_statusbar_checkbox)
+
+        self.prefer_utf8_save_checkbox = QCheckBox()
+        save_policy = str(self.main_window.config.get("save_encoding_policy", "preserve")).lower()
+        self.prefer_utf8_save_checkbox.setChecked(save_policy == "utf-8")
+        layout.addWidget(self.prefer_utf8_save_checkbox)
 
         self.line = QFrame()
         self.line.setFrameShape(QFrame.Shape.HLine)
@@ -169,6 +180,18 @@ class SettingsDialog(QDialog):
         self.label_theme_mode.setText(tr("settings_theme_mode"))
         self.label_language.setText(tr("settings_language"))
         self.label_select_lang.setText(tr("settings_select_lang"))
+        advanced_status_bar_text = tr("settings_advanced_status_bar")
+        self.advanced_statusbar_checkbox.setText(
+            advanced_status_bar_text
+            if advanced_status_bar_text != "settings_advanced_status_bar"
+            else "Advanced status bar"
+        )
+        prefer_utf8_text = tr("settings_prefer_utf8_on_save")
+        self.prefer_utf8_save_checkbox.setText(
+            prefer_utf8_text
+            if prefer_utf8_text != "settings_prefer_utf8_on_save"
+            else "Prefer UTF-8 on save"
+        )
         self.cancel_button.setText(tr("btn_cancel"))
         self.apply_button.setText(tr("settings_btn_apply"))
         
@@ -181,10 +204,14 @@ class SettingsDialog(QDialog):
         # 1. Pobranie wyborów
         selected_theme = self.theme_selector.currentData() # "light", "dark" lub "system"
         selected_lang = self.lang_selector.currentData()   # "pl-pl", "en-us" lub "system"
+        status_bar_mode = "advanced" if self.advanced_statusbar_checkbox.isChecked() else "simple"
+        save_encoding_policy = "utf-8" if self.prefer_utf8_save_checkbox.isChecked() else "preserve"
 
         # 2. Zapis do configu (ważne, aby MainWindow pamiętał to po restarcie)
         self.main_window.config["theme"] = selected_theme
         self.main_window.config["language"] = selected_lang
+        self.main_window.config["save_encoding_policy"] = save_encoding_policy
+        self.main_window.apply_status_bar_mode(status_bar_mode)
         self.main_window.save_config() # Zakładam, że masz taką metodę
 
         # 3. Aplikacja motywu

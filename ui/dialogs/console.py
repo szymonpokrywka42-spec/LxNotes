@@ -1,6 +1,7 @@
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QTextEdit, QLineEdit
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont, QTextCursor
+import html
 
 class ConsoleDialog(QDialog):
     def __init__(self, parent=None, logic=None):
@@ -86,9 +87,10 @@ class ConsoleDialog(QDialog):
                 break
 
         color = self.get_color_for_level(active_level)
+        escaped_text = html.escape(text)
         
         # Formatowanie HTML
-        html_msg = f'<div style="color:{color}; white-space: pre-wrap;">{text}</div>'
+        html_msg = f'<div style="color:{color}; white-space: pre-wrap;">{escaped_text}</div>'
         self.display.append(html_msg)
         
         # Auto-scroll

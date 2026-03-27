@@ -24,13 +24,18 @@ class FileMenu(QMenu):
         self.save_action.setShortcutContext(ctx)
         self.save_action.triggered.connect(self.save_file)
 
+        self.save_all_action = QAction(self)
+        self.save_all_action.setShortcut(QKeySequence("Ctrl+Shift+S"))
+        self.save_all_action.setShortcutContext(ctx)
+        self.save_all_action.triggered.connect(self.save_all_files)
+
         self.save_as_action = QAction(self)
-        self.save_as_action.setShortcut(QKeySequence("Ctrl+Shift+S"))
+        self.save_as_action.setShortcut(QKeySequence("Ctrl+Alt+Shift+S"))
         self.save_as_action.setShortcutContext(ctx)
         self.save_as_action.triggered.connect(self.save_file_as)
 
         self.print_action = QAction(self)
-        self.print_action.setShortcut(QKeySequence.StandardKey.Print) # Ctrl+P
+        self.print_action.setShortcut(QKeySequence("Ctrl+Alt+P"))
         self.print_action.setShortcutContext(ctx)
         self.print_action.triggered.connect(self.main_window.print_current)
 
@@ -43,6 +48,7 @@ class FileMenu(QMenu):
         # Tutaj print jest tylko RAZ i nie ma duplikatów akcji z EditMenu
         self.addAction(self.open_action)
         self.addAction(self.save_action)
+        self.addAction(self.save_all_action)
         self.addAction(self.save_as_action)
         self.addSeparator()
         self.addAction(self.print_action)
@@ -58,6 +64,8 @@ class FileMenu(QMenu):
         
         self.open_action.setText(tr("action_open"))
         self.save_action.setText(tr("action_save"))
+        save_all_text = tr("action_save_all")
+        self.save_all_action.setText(save_all_text if save_all_text != "action_save_all" else "Save All")
         self.save_as_action.setText(tr("action_save_as"))
         self.print_action.setText(tr("action_print"))
         self.exit_action.setText(tr("action_exit"))
@@ -82,6 +90,12 @@ class FileMenu(QMenu):
             self.file_handler.save_file()
         else:
             self.console.log("Save failed: No active tab.", "WARN")
+
+    def save_all_files(self):
+        if self.main_window.editor_manager.get_current_editor():
+            self.file_handler.save_all()
+        else:
+            self.console.log("Save All failed: No active tab.", "WARN")
 
     def save_file_as(self):
         if self.main_window.editor_manager.get_current_editor():

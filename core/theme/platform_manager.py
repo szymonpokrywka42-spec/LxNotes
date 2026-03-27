@@ -2,7 +2,7 @@ import os
 import sys
 import platform
 import ctypes
-import subprocess
+from PyQt6.QtCore import Qt
 from core.logging import log_message
 
 class PlatformManager:
@@ -110,9 +110,10 @@ class PlatformManager:
         # Specyficzne dla KDE (Blur/Transparent)
         if self.de == "KDE":
             try:
-                main_window.setAttribute(ctypes.c_bool(True).value, "WA_TranslucentBackground")
+                main_window.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
                 self.log("✨ KDE Translucency applied.")
-            except: pass
+            except Exception as e:
+                self.log(f"KDE translucency tweak failed: {e}", "DEBUG")
 
         # Specyficzne dla GNOME/Pantheon (Modern look)
         if features.get("csd"):
@@ -127,7 +128,8 @@ class PlatformManager:
                 lib.g_set_prgname(b"lxnotes")
                 if hasattr(lib, 'g_set_application_name'):
                     lib.g_set_application_name(b"LxNotes")
-            except: pass
+            except Exception as e:
+                self.log(f"set_app_id skipped: {e}", "DEBUG")
 
     def get_info(self):
         return f"{self.os_type} {self.de} ({self.session})"

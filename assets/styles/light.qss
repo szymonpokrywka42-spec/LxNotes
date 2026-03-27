@@ -153,14 +153,18 @@ QStatusBar::item {
 }
 
 QLabel#engineStatusLabel,
-QLabel#turboStatusLabel {
+QLabel#turboStatusLabel,
+QLabel#statsStatusLabel,
+QLabel#insightsStatusLabel,
+QLabel#encodingStatusLabel,
+QLabel#cursorStatusLabel {
     background-color: #d5ebdc;
     border: 1px solid #8EB69B;
     border-radius: 8px;
-    padding: 3px 8px;
+    padding: 2px 8px;
     font-weight: 600;
     color: #163832;
-    margin-right: 8px;
+    margin-right: 6px;
 }
 
 QLabel#engineStatusLabel[engineState="cpp"] {
